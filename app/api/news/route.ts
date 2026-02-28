@@ -41,13 +41,14 @@ export async function GET(request: NextRequest) {
       : TOPIC_FEEDS[topic] || TOPIC_FEEDS.general;
 
     const feed = await parser.parseURL(feedUrl);
+    const items = feed.items.slice(0, 50);
 
+    // Geocode sequentially (Nominatim rate limit: 1 req/sec)
     const articles: NewsArticle[] = [];
-    for (const item of feed.items.slice(0, 50)) {
+    for (const item of items) {
       const title = item.title || "";
       const snippet = item.contentSnippet || item.content || "";
-      const source = extractSource(title);
-      const coords = geocode(`${title} ${snippet}`);
+      const coords = await geocode(`${title} ${snippet}`);
       if (!coords) continue;
 
       articles.push({
@@ -55,7 +56,7 @@ export async function GET(request: NextRequest) {
         title: cleanTitle(title),
         snippet: snippet.slice(0, 200),
         url: item.link || "",
-        source,
+        source: extractSource(title),
         publishedAt: item.isoDate || item.pubDate || new Date().toISOString(),
         category: topic,
         lat: coords.lat,
