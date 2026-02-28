@@ -101,12 +101,16 @@ export default function GlobeScene() {
     // Auto-rotate the globe
     let animationId: number;
 
+    const ROTATION_MAX_ZOOM = 3.5; // stop rotating when zoomed in past this
+
     const rotate = () => {
       if (!isUserInteracting.current && mapRef.current) {
         const map = mapRef.current.getMap();
-        const center = map.getCenter();
-        center.lng += rotationSpeed;
-        map.setCenter(center);
+        if (map.getZoom() < ROTATION_MAX_ZOOM) {
+          const center = map.getCenter();
+          center.lng += rotationSpeed;
+          map.setCenter(center);
+        }
       }
       animationId = requestAnimationFrame(rotate);
     };
