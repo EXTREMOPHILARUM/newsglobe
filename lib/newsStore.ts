@@ -109,11 +109,16 @@ export const useNewsStore = create<NewsState>((set, get) => ({
 
       // For search/topic queries, fetch all at once (no batching)
       if (searchQuery || (activeCategory !== "all" && activeCategory !== "world")) {
+        // When searching, don't pass topic — Google News search doesn't support it
+        if (searchQuery) params.delete("topic");
         const res = await fetch(`/api/news?${params.toString()}`);
         if (!res.ok) throw new Error("Failed to fetch news");
         const raw: NewsArticle[] = await res.json();
         const data = geocodeArticles(raw);
-        const filtered = filterArticles(data, activeCategory, searchQuery);
+        // Don't filter by category during search — results don't have meaningful categories
+        const filtered = searchQuery
+          ? filterArticles(data, "all", searchQuery)
+          : filterArticles(data, activeCategory, searchQuery);
 
         let pendingFlyTo: FlyToTarget | null = null;
         if (searchQuery && filtered.length > 0) {

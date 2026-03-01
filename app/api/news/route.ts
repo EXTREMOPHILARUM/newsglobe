@@ -282,7 +282,7 @@ export async function GET(request: NextRequest) {
           url,
           source: extractSource(title),
           publishedAt: item.isoDate || item.pubDate || new Date().toISOString(),
-          category: topic,
+          category: "general" as Category,
           lat: region.lat,
           lng: region.lng,
           regionLat: region.lat,
