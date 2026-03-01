@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { NewsArticle, Category } from "./types";
 import { COUNTRY_BY_CODE } from "./countryFeeds";
+import { geocodeFast } from "./geocode";
 
 interface SelectedCountry {
   code: string;
@@ -32,6 +33,22 @@ interface NewsState {
   fetchNews: () => Promise<void>;
   selectCountry: (code: string, name: string) => Promise<void>;
   clearCountry: () => void;
+}
+
+/** Apply client-side geocoding to refine article coordinates */
+function geocodeArticles(articles: NewsArticle[]): NewsArticle[] {
+  return articles.map((a) => {
+    const coords = geocodeFast(`${a.title} ${a.snippet}`);
+    if (coords) {
+      return { ...a, lat: coords.lat, lng: coords.lng };
+    }
+    // Fall back to region coords
+    return {
+      ...a,
+      lat: a.regionLat ?? a.lat,
+      lng: a.regionLng ?? a.lng,
+    };
+  });
 }
 
 function filterArticles(
@@ -94,7 +111,8 @@ export const useNewsStore = create<NewsState>((set, get) => ({
       if (searchQuery || (activeCategory !== "all" && activeCategory !== "world")) {
         const res = await fetch(`/api/news?${params.toString()}`);
         if (!res.ok) throw new Error("Failed to fetch news");
-        const data: NewsArticle[] = await res.json();
+        const raw: NewsArticle[] = await res.json();
+        const data = geocodeArticles(raw);
         const filtered = filterArticles(data, activeCategory, searchQuery);
 
         let pendingFlyTo: FlyToTarget | null = null;
@@ -126,7 +144,8 @@ export const useNewsStore = create<NewsState>((set, get) => ({
         batchParams.set("batch", String(b));
         const res = await fetch(`/api/news?${batchParams.toString()}`);
         if (!res.ok) continue;
-        const batchData: NewsArticle[] = await res.json();
+        const batchRaw: NewsArticle[] = await res.json();
+        const batchData = geocodeArticles(batchRaw);
 
         const { articles: existing, activeCategory: cat, searchQuery: q } = get();
         // First batch replaces, subsequent batches merge
@@ -161,7 +180,8 @@ export const useNewsStore = create<NewsState>((set, get) => ({
     try {
       const res = await fetch(`/api/news?country=${encodeURIComponent(code)}`);
       if (!res.ok) throw new Error("Failed to fetch country news");
-      const data: NewsArticle[] = await res.json();
+      const raw: NewsArticle[] = await res.json();
+      const data = geocodeArticles(raw);
       set({ countryArticles: data, countryLoading: false });
     } catch {
       set({ countryLoading: false });

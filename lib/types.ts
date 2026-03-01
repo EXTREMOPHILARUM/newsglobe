@@ -18,6 +18,8 @@ export interface NewsArticle {
   category: Category;
   lat: number;
   lng: number;
+  regionLat?: number;
+  regionLng?: number;
 }
 
 export const CATEGORY_COLORS: Record<Category, string> = {

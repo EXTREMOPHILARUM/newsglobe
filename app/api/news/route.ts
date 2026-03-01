@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import Parser from "rss-parser";
-import { geocode } from "@/lib/geocode";
 import { NewsArticle, Category } from "@/lib/types";
 import { COUNTRY_BY_CODE } from "@/lib/countryFeeds";
 
@@ -134,10 +133,6 @@ async function fetchRegionFeed(
       const title = item.title || "";
       const snippet = item.contentSnippet || item.content || "";
 
-      // Try text-based geocoding first for city-level precision
-      const textCoords = await geocode(`${title} ${snippet}`);
-      const coords = textCoords || { lat: region.lat, lng: region.lng };
-
       articles.push({
         id: item.guid || item.link || Math.random().toString(36),
         title: cleanTitle(title),
@@ -146,8 +141,10 @@ async function fetchRegionFeed(
         source: extractSource(title),
         publishedAt: item.isoDate || item.pubDate || new Date().toISOString(),
         category,
-        lat: coords.lat,
-        lng: coords.lng,
+        lat: region.lat,
+        lng: region.lng,
+        regionLat: region.lat,
+        regionLng: region.lng,
       });
     }
     return articles;
@@ -180,6 +177,8 @@ async function fetchFallbackFeeds(
             category: "general" as Category,
             lat: country.lat,
             lng: country.lng,
+            regionLat: country.lat,
+            regionLng: country.lng,
           };
         });
       } catch {
@@ -275,8 +274,6 @@ export async function GET(request: NextRequest) {
 
         const title = item.title || "";
         const snippet = item.contentSnippet || item.content || "";
-        const textCoords = await geocode(`${title} ${snippet}`);
-        const coords = textCoords || { lat: region.lat, lng: region.lng };
 
         articles.push({
           id: item.guid || url || Math.random().toString(36),
@@ -286,8 +283,10 @@ export async function GET(request: NextRequest) {
           source: extractSource(title),
           publishedAt: item.isoDate || item.pubDate || new Date().toISOString(),
           category: topic,
-          lat: coords.lat,
-          lng: coords.lng,
+          lat: region.lat,
+          lng: region.lng,
+          regionLat: region.lat,
+          regionLng: region.lng,
         });
       }
       return articles;
@@ -301,9 +300,8 @@ export async function GET(request: NextRequest) {
       for (const item of items) {
         const title = item.title || "";
         const snippet = item.contentSnippet || item.content || "";
-        const coords = await geocode(`${title} ${snippet}`);
-        if (!coords) continue;
 
+        // Topic feeds are US-centric, use US centroid as fallback
         articles.push({
           id: item.guid || item.link || Math.random().toString(36),
           title: cleanTitle(title),
@@ -312,8 +310,10 @@ export async function GET(request: NextRequest) {
           source: extractSource(title),
           publishedAt: item.isoDate || item.pubDate || new Date().toISOString(),
           category: topic,
-          lat: coords.lat,
-          lng: coords.lng,
+          lat: 39.8,
+          lng: -98.5,
+          regionLat: 39.8,
+          regionLng: -98.5,
         });
       }
       return articles;

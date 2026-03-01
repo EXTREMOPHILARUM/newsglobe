@@ -124,6 +124,16 @@ function extractCandidates(text: string): Match[] {
   return matches;
 }
 
+// --- Fast geocode (static table only, no Nominatim, no async) ---
+
+export function geocodeFast(
+  text: string
+): { lat: number; lng: number } | null {
+  const candidates = extractCandidates(text);
+  if (candidates.length === 0) return null;
+  return staticFallback(candidates[0].key);
+}
+
 // --- Main geocode (async, Nominatim-enhanced) ---
 
 export async function geocode(
