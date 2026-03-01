@@ -50,6 +50,18 @@ export default function RootLayout({
       >
         {children}
         <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-7NZH2FX38X"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-7NZH2FX38X');
+          `}
+        </Script>
+        <Script
           defer
           src="https://static.cloudflareinsights.com/beacon.min.js"
           data-cf-beacon='{"token": "a21ae83f49294965bd5f2b7f0a06457a"}'
