@@ -113,13 +113,7 @@ const REGION_FEEDS: RegionFeed[] = [
   { gl: "CU", ceid: "CU:es-419", hl: "es-419", lat: 21.5, lng: -77.8, name: "Cuba" },
 ];
 
-interface CacheEntry {
-  data: NewsArticle[];
-  timestamp: number;
-}
-
-const cache = new Map<string, CacheEntry>();
-const CACHE_TTL = 5 * 60 * 1000;
+const CACHE_TTL_SECONDS = 300; // 5 minutes
 
 // Fetch a single region feed, return articles with region fallback coords
 async function fetchRegionFeed(
@@ -193,6 +187,29 @@ async function fetchFallbackFeeds(
   return results.flat().slice(0, maxItems);
 }
 
+// Use Workers Cache API for edge caching (free, per-datacenter)
+async function cachedResponse(cacheKey: string, fetchData: () => Promise<NewsArticle[]>): Promise<Response> {
+  const cacheUrl = new URL(`https://newsglobe-cache.internal/${cacheKey}`);
+  const cacheReq = new Request(cacheUrl.toString());
+
+  // @ts-expect-error - caches.default is available in Workers runtime
+  const cfCache = typeof caches !== "undefined" && caches.default;
+  if (cfCache) {
+    const cached = await cfCache.match(cacheReq);
+    if (cached) return cached;
+  }
+
+  const articles = await fetchData();
+  const response = NextResponse.json(articles);
+  response.headers.set("Cache-Control", `s-maxage=${CACHE_TTL_SECONDS}`);
+
+  if (cfCache) {
+    // Store in edge cache (non-blocking)
+    cfCache.put(cacheReq, response.clone());
+  }
+  return response;
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const topic = (searchParams.get("topic") || "general") as Category;
@@ -209,48 +226,21 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const countryCacheKey = `country:${country.toUpperCase()}`;
-    const countryCached = cache.get(countryCacheKey);
-    if (countryCached && Date.now() - countryCached.timestamp < CACHE_TTL) {
-      return NextResponse.json(countryCached.data);
-    }
-
-    try {
-      let articles: NewsArticle[];
-
+    return cachedResponse(`country:${country.toUpperCase()}`, async () => {
       if (countryData.gl && countryData.ceid && countryData.hl) {
-        // Google News feed
         const region: RegionFeed = {
           gl: countryData.gl, ceid: countryData.ceid, hl: countryData.hl,
           lat: countryData.lat, lng: countryData.lng, name: countryData.name,
         };
-        articles = await fetchRegionFeed(region, "general", 20);
+        return fetchRegionFeed(region, "general", 20);
       } else if (countryData.fallbackFeeds && countryData.fallbackFeeds.length > 0) {
-        // Fallback direct RSS feeds
-        articles = await fetchFallbackFeeds(countryData.fallbackFeeds, countryData, 20);
-      } else {
-        articles = [];
+        return fetchFallbackFeeds(countryData.fallbackFeeds, countryData, 20);
       }
-
-      cache.set(countryCacheKey, { data: articles, timestamp: Date.now() });
-      return NextResponse.json(articles);
-    } catch {
-      return NextResponse.json(
-        { error: "Failed to fetch country news" },
-        { status: 500 }
-      );
-    }
+      return [];
+    });
   }
 
-  const cacheKey = `${topic}:${query}`;
-  const cached = cache.get(cacheKey);
-  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-    return NextResponse.json(cached.data);
-  }
-
-  try {
-    let articles: NewsArticle[];
-
+  return cachedResponse(`${topic}:${query}`, async () => {
     if (query) {
       // Search mode: search across a few major regions in parallel
       const searchRegions = REGION_FEEDS.slice(0, 8);
@@ -270,7 +260,7 @@ export async function GET(request: NextRequest) {
       );
 
       const allItems = results.flat();
-      articles = [];
+      const articles: NewsArticle[] = [];
       const seenUrls = new Set<string>();
 
       for (const { item, region } of allItems) {
@@ -295,12 +285,13 @@ export async function GET(request: NextRequest) {
           lng: coords.lng,
         });
       }
+      return articles;
     } else if (topic !== "general" && topic !== "world") {
       // Specific topic: use topic feed (US-centric)
       const feedUrl = TOPIC_FEEDS[topic] || TOPIC_FEEDS.general;
       const feed = await parser.parseURL(feedUrl);
       const items = feed.items.slice(0, 50);
-      articles = [];
+      const articles: NewsArticle[] = [];
 
       for (const item of items) {
         const title = item.title || "";
@@ -320,32 +311,24 @@ export async function GET(request: NextRequest) {
           lng: coords.lng,
         });
       }
+      return articles;
     } else {
       // Global view: fetch from all region feeds in parallel
-      // Take 3-5 articles per region to get ~100 total spread across the globe
       const perRegion = Math.ceil(100 / REGION_FEEDS.length);
       const regionResults = await Promise.all(
         REGION_FEEDS.map((region) => fetchRegionFeed(region, topic, perRegion))
       );
-      articles = regionResults.flat();
+      const articles = regionResults.flat();
 
       // Deduplicate by URL
       const seen = new Set<string>();
-      articles = articles.filter((a) => {
+      return articles.filter((a) => {
         if (seen.has(a.url)) return false;
         seen.add(a.url);
         return true;
       });
     }
-
-    cache.set(cacheKey, { data: articles, timestamp: Date.now() });
-    return NextResponse.json(articles);
-  } catch {
-    return NextResponse.json(
-      { error: "Failed to fetch news" },
-      { status: 500 }
-    );
-  }
+  });
 }
 
 function extractSource(title: string): string {
