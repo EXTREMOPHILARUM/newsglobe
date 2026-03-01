@@ -119,7 +119,7 @@ const ALL_GLOBAL_FEEDS: GlobalFeedItem[] = [
 ];
 
 const FEEDS_PER_BATCH = 15;
-const CACHE_TTL_SECONDS = 300;
+const CACHE_TTL_SECONDS = 1800; // 30 minutes
 
 export function getTotalBatches(): number {
   return Math.ceil(ALL_GLOBAL_FEEDS.length / FEEDS_PER_BATCH);
