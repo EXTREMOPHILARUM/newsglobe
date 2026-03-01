@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Parser from "rss-parser";
 import { NewsArticle, Category } from "@/lib/types";
-import { COUNTRY_BY_CODE } from "@/lib/countryFeeds";
+import { COUNTRY_BY_CODE, COUNTRIES, FeedEntry } from "@/lib/countryFeeds";
 
 type MediaField = { $?: { url?: string } };
 type CustomItem = {
@@ -128,13 +128,35 @@ const REGION_FEEDS: RegionFeed[] = [
   { gl: "CU", ceid: "CU:es-419", hl: "es-419", lat: 21.5, lng: -77.8, name: "Cuba" },
 ];
 
+// Fallback feed countries (no Google News edition) for global view
+interface FallbackFeedEntry {
+  feeds: (string | FeedEntry)[];
+  lat: number;
+  lng: number;
+  name: string;
+}
+
+const FALLBACK_FEED_ENTRIES: FallbackFeedEntry[] = COUNTRIES
+  .filter((c) => !c.gl && c.fallbackFeeds && c.fallbackFeeds.length > 0)
+  .map((c) => ({ feeds: c.fallbackFeeds!, lat: c.lat, lng: c.lng, name: c.name }));
+
+// Unified feed item: either a Google News region or a fallback feed country
+type GlobalFeedItem =
+  | { type: "region"; data: RegionFeed }
+  | { type: "fallback"; data: FallbackFeedEntry };
+
+const ALL_GLOBAL_FEEDS: GlobalFeedItem[] = [
+  ...REGION_FEEDS.map((r): GlobalFeedItem => ({ type: "region", data: r })),
+  ...FALLBACK_FEED_ENTRIES.map((f): GlobalFeedItem => ({ type: "fallback", data: f })),
+];
+
 // Batch size for server-side fetching within a single API call
 const BATCH_SIZE = 10;
-// Number of regions per client-side batch request
-const REGIONS_PER_BATCH = 20;
+// Number of feeds per client-side batch request
+const FEEDS_PER_BATCH = 20;
 
 export function getTotalBatches(): number {
-  return Math.ceil(REGION_FEEDS.length / REGIONS_PER_BATCH);
+  return Math.ceil(ALL_GLOBAL_FEEDS.length / FEEDS_PER_BATCH);
 }
 
 const CACHE_TTL_SECONDS = 300; // 5 minutes
@@ -176,26 +198,34 @@ async function fetchRegionFeed(
   }
 }
 
+// Normalize feed entries to { url, name? } format
+function normalizeFeedEntries(feeds: (string | FeedEntry)[]): FeedEntry[] {
+  return feeds.map((f) => (typeof f === "string" ? { url: f } : f));
+}
+
 // Fetch from direct RSS feeds (fallback for countries without Google News)
 async function fetchFallbackFeeds(
-  feedUrls: string[],
+  feedUrls: (string | FeedEntry)[],
   country: { lat: number; lng: number; name: string },
   maxItems: number
 ): Promise<NewsArticle[]> {
-  const perFeed = Math.ceil(maxItems / feedUrls.length);
+  const entries = normalizeFeedEntries(feedUrls);
+  const perFeed = Math.ceil(maxItems / entries.length);
   const results = await Promise.all(
-    feedUrls.map(async (url) => {
+    entries.map(async (entry) => {
       try {
-        const feed = await parser.parseURL(url);
+        const feed = await parser.parseURL(entry.url);
         return feed.items.slice(0, perFeed).map((item) => {
           const title = item.title || "";
           const snippet = item.contentSnippet || item.content || "";
+          const titleSource = extractSource(title);
+          const source = entry.name || (titleSource !== "Unknown" ? titleSource : (feed.title || "Unknown"));
           return {
             id: item.guid || item.link || Math.random().toString(36),
             title: cleanTitle(title),
             snippet: snippet.slice(0, 200),
             url: item.link || "",
-            source: extractSource(title) !== "Unknown" ? extractSource(title) : (feed.title || "Unknown"),
+            source,
             publishedAt: item.isoDate || item.pubDate || new Date().toISOString(),
             category: "general" as Category,
             lat: country.lat,
@@ -237,12 +267,26 @@ async function cachedResponse(cacheKey: string, fetchData: () => Promise<NewsArt
   return response;
 }
 
-/** Reorder REGION_FEEDS so the user's country appears first (in batch 0) */
+/** Reorder ALL_GLOBAL_FEEDS so the user's country appears first (in batch 0) */
+function reorderFeeds(loc: string | null): GlobalFeedItem[] {
+  if (!loc) return ALL_GLOBAL_FEEDS;
+  const upperLoc = loc.toUpperCase();
+  const idx = ALL_GLOBAL_FEEDS.findIndex((f) =>
+    f.type === "region" ? f.data.gl === upperLoc : false
+  );
+  if (idx <= 0) return ALL_GLOBAL_FEEDS; // already first or not found
+  const reordered = [...ALL_GLOBAL_FEEDS];
+  const [moved] = reordered.splice(idx, 1);
+  reordered.unshift(moved);
+  return reordered;
+}
+
+/** Reorder just REGION_FEEDS for search (search only uses Google News regions) */
 function reorderRegions(loc: string | null): RegionFeed[] {
   if (!loc) return REGION_FEEDS;
   const upperLoc = loc.toUpperCase();
   const idx = REGION_FEEDS.findIndex((r) => r.gl === upperLoc);
-  if (idx <= 0) return REGION_FEEDS; // already first or not found
+  if (idx <= 0) return REGION_FEEDS;
   const reordered = [...REGION_FEEDS];
   const [moved] = reordered.splice(idx, 1);
   reordered.unshift(moved);
@@ -268,16 +312,19 @@ export async function GET(request: NextRequest) {
     }
 
     return cachedResponse(`country:${country.toUpperCase()}`, async () => {
+      const results: NewsArticle[] = [];
       if (countryData.gl && countryData.ceid && countryData.hl) {
         const region: RegionFeed = {
           gl: countryData.gl, ceid: countryData.ceid, hl: countryData.hl,
           lat: countryData.lat, lng: countryData.lng, name: countryData.name,
         };
-        return fetchRegionFeed(region, "general", 20);
-      } else if (countryData.fallbackFeeds && countryData.fallbackFeeds.length > 0) {
-        return fetchFallbackFeeds(countryData.fallbackFeeds, countryData, 20);
+        results.push(...await fetchRegionFeed(region, "general", 15));
       }
-      return [];
+      if (countryData.fallbackFeeds && countryData.fallbackFeeds.length > 0) {
+        const maxFallback = results.length > 0 ? 10 : 20;
+        results.push(...await fetchFallbackFeeds(countryData.fallbackFeeds, countryData, maxFallback));
+      }
+      return results;
     });
   }
 
@@ -363,27 +410,32 @@ export async function GET(request: NextRequest) {
       const totalBatches = getTotalBatches();
       const batchIndex = batch !== null ? parseInt(batch, 10) : null;
 
-      // Determine which regions to fetch (reordered by user location)
-      const orderedFeeds = reorderRegions(loc);
-      let regions: RegionFeed[];
+      // Determine which feeds to fetch (reordered by user location)
+      const orderedFeeds = reorderFeeds(loc);
+      let feeds: GlobalFeedItem[];
       if (batchIndex !== null && batchIndex >= 0 && batchIndex < totalBatches) {
-        const start = batchIndex * REGIONS_PER_BATCH;
-        regions = orderedFeeds.slice(start, start + REGIONS_PER_BATCH);
+        const start = batchIndex * FEEDS_PER_BATCH;
+        feeds = orderedFeeds.slice(start, start + FEEDS_PER_BATCH);
       } else {
-        // No batch param: fetch all (backwards compatible, used by search/topic)
-        regions = orderedFeeds;
+        feeds = orderedFeeds;
       }
 
-      const perRegion = Math.ceil(100 / REGION_FEEDS.length);
-      const regionResults: NewsArticle[][] = [];
-      for (let i = 0; i < regions.length; i += BATCH_SIZE) {
-        const chunk = regions.slice(i, i + BATCH_SIZE);
+      const perFeed = Math.ceil(100 / ALL_GLOBAL_FEEDS.length);
+      const feedResults: NewsArticle[][] = [];
+      for (let i = 0; i < feeds.length; i += BATCH_SIZE) {
+        const chunk = feeds.slice(i, i + BATCH_SIZE);
         const chunkResults = await Promise.all(
-          chunk.map((region) => fetchRegionFeed(region, topic, perRegion))
+          chunk.map((feed) => {
+            if (feed.type === "region") {
+              return fetchRegionFeed(feed.data, topic, perFeed);
+            } else {
+              return fetchFallbackFeeds(feed.data.feeds, feed.data, perFeed);
+            }
+          })
         );
-        regionResults.push(...chunkResults);
+        feedResults.push(...chunkResults);
       }
-      const articles = regionResults.flat();
+      const articles = feedResults.flat();
 
       // Deduplicate by URL
       const seen = new Set<string>();

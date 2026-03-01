@@ -157,10 +157,10 @@ export const useNewsStore = create<NewsState>((set, get) => ({
         return;
       }
 
-      // Global view: fetch incrementally in batches
-      const totalBatches = 4; // ceil(69 regions / 20 per batch)
+      // Global view: fetch incrementally in batches (stops when a batch returns empty)
+      const MAX_BATCHES = 10;
 
-      for (let b = 0; b < totalBatches; b++) {
+      for (let b = 0; b < MAX_BATCHES; b++) {
         // Abort if user started a search or selected a country mid-fetch
         const currentState = get();
         if (currentState.searchQuery || currentState.selectedCountry) break;
@@ -170,6 +170,7 @@ export const useNewsStore = create<NewsState>((set, get) => ({
         const res = await fetch(`/api/news?${batchParams.toString()}`);
         if (!res.ok) continue;
         const batchRaw: NewsArticle[] = await res.json();
+        if (batchRaw.length === 0) break; // no more batches
         const batchData = geocodeArticles(batchRaw);
 
         const { articles: existing, activeCategory: cat, searchQuery: q } = get();
