@@ -1,6 +1,5 @@
 export type Category =
   | "general"
-  | "world"
   | "business"
   | "technology"
   | "science"
@@ -25,7 +24,6 @@ export interface NewsArticle {
 
 export const CATEGORY_COLORS: Record<Category, string> = {
   general: "#ffffff",
-  world: "#ef4444",
   business: "#f97316",
   technology: "#3b82f6",
   science: "#a855f7",
@@ -36,7 +34,6 @@ export const CATEGORY_COLORS: Record<Category, string> = {
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   general: "General",
-  world: "World",
   business: "Business",
   technology: "Tech",
   science: "Science",

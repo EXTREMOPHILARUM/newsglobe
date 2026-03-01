@@ -5,7 +5,6 @@ import { Category, CATEGORY_COLORS, CATEGORY_LABELS } from "@/lib/types";
 
 const categories: (Category | "all")[] = [
   "all",
-  "world",
   "technology",
   "business",
   "science",
