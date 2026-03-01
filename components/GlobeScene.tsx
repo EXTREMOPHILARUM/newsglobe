@@ -10,18 +10,39 @@ import Map, {
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useNewsStore } from "@/lib/newsStore";
 import { CATEGORY_COLORS, NewsArticle } from "@/lib/types";
-import { COUNTRIES } from "@/lib/countryFeeds";
+import { COUNTRY_BY_CODE } from "@/lib/countryFeeds";
 import DayNightOverlay from "./DayNightOverlay";
+import * as topojson from "topojson-client";
+import type { Topology } from "topojson-specification";
 
-function haversineDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
-  const toRad = Math.PI / 180;
-  const dLat = (lat2 - lat1) * toRad;
-  const dLng = (lng2 - lng1) * toRad;
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(lat1 * toRad) * Math.cos(lat2 * toRad) * Math.sin(dLng / 2) ** 2;
-  return 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) * 6371;
-}
+// ISO 3166-1 numeric → alpha-2 mapping for countries in our feed system
+const ISO_NUM_TO_ALPHA2: Record<string, string> = {
+  "004":"AF","008":"AL","012":"DZ","020":"AD","024":"AO","028":"AG","032":"AR",
+  "036":"AU","040":"AT","044":"BS","048":"BH","050":"BD","051":"AM","052":"BB",
+  "056":"BE","064":"BT","068":"BO","070":"BA","072":"BW","076":"BR","084":"BZ",
+  "090":"SB","096":"BN","100":"BG","104":"MM","108":"BI","112":"BY","116":"KH",
+  "120":"CM","124":"CA","140":"CF","144":"LK","148":"TD","152":"CL","156":"CN",
+  "158":"TW","170":"CO","174":"KM","178":"CG","180":"CD","188":"CR","191":"HR",
+  "192":"CU","196":"CY","203":"CZ","204":"BJ","208":"DK","214":"DO","218":"EC",
+  "222":"SV","226":"GQ","231":"ET","232":"ER","233":"EE","242":"FJ","246":"FI",
+  "250":"FR","262":"DJ","266":"GA","268":"GE","270":"GM","275":"PS","276":"DE",
+  "288":"GH","300":"GR","308":"GD","320":"GT","324":"GN","328":"GY","332":"HT",
+  "340":"HN","344":"HK","348":"HU","352":"IS","356":"IN","360":"ID","364":"IR",
+  "368":"IQ","372":"IE","376":"IL","380":"IT","384":"CI","388":"JM","392":"JP",
+  "398":"KZ","400":"JO","404":"KE","408":"KP","410":"KR","414":"KW","417":"KG",
+  "418":"LA","422":"LB","426":"LS","428":"LV","430":"LR","434":"LY","440":"LT",
+  "442":"LU","450":"MG","454":"MW","458":"MY","462":"MV","466":"ML","470":"MT",
+  "478":"MR","480":"MU","484":"MX","496":"MN","498":"MD","504":"MA","508":"MZ",
+  "512":"OM","516":"NA","524":"NP","528":"NL","540":"NC","554":"NZ","558":"NI",
+  "562":"NE","566":"NG","578":"NO","586":"PK","591":"PA","598":"PG","600":"PY",
+  "604":"PE","608":"PH","616":"PL","620":"PT","630":"PR","634":"QA","642":"RO",
+  "643":"RU","646":"RW","682":"SA","686":"SN","688":"RS","694":"SL","702":"SG",
+  "703":"SK","704":"VN","705":"SI","706":"SO","710":"ZA","716":"ZW","724":"ES",
+  "728":"SS","729":"SD","740":"SR","748":"SZ","752":"SE","756":"CH","760":"SY",
+  "762":"TJ","764":"TH","768":"TG","780":"TT","784":"AE","788":"TN","792":"TR",
+  "795":"TM","800":"UG","804":"UA","818":"EG","826":"GB","834":"TZ","840":"US",
+  "854":"BF","858":"UY","860":"UZ","862":"VE","887":"YE","894":"ZM",
+};
 
 const DARK_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
@@ -132,22 +153,25 @@ export default function GlobeScene() {
         return;
       }
 
-      const { lat, lng } = e.lngLat;
-      const MAX_DISTANCE_KM = 2000;
+      if (!mapRef.current) return;
+      const map = mapRef.current.getMap();
 
-      let nearest: (typeof COUNTRIES)[0] | null = null;
-      let nearestDist = Infinity;
-      for (const c of COUNTRIES) {
-        const d = haversineDistance(lat, lng, c.lat, c.lng);
-        if (d < nearestDist) {
-          nearestDist = d;
-          nearest = c;
-        }
-      }
+      // Query the invisible country fill layer for polygon hit-testing
+      const features = map.queryRenderedFeatures(e.point, {
+        layers: ["country-fills"],
+      });
 
-      if (!nearest || nearestDist > MAX_DISTANCE_KM) return;
+      if (features.length === 0) return;
 
-      selectCountry(nearest.code, nearest.name);
+      const feature = features[0];
+      const numericCode = String(feature.properties?.iso_n3 || feature.id || "");
+      const alpha2 = ISO_NUM_TO_ALPHA2[numericCode];
+      if (!alpha2) return;
+
+      const countryData = COUNTRY_BY_CODE.get(alpha2);
+      if (!countryData) return;
+
+      selectCountry(alpha2, countryData.name);
       setPopupArticle(null);
     },
     [selectCountry]
@@ -174,6 +198,36 @@ export default function GlobeScene() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flyToVersion]);
   const rotationSpeed = 0.03; // degrees per frame
+
+  // Load country polygons for click detection
+  useEffect(() => {
+    if (!mapLoaded || !mapRef.current) return;
+    const map = mapRef.current.getMap();
+    if (map.getSource("countries")) return;
+
+    fetch("/countries-110m.json")
+      .then((r) => r.json())
+      .then((topo: Topology) => {
+        const geojson = topojson.feature(topo, topo.objects.countries);
+        // Add iso_n3 property from feature id for lookup
+        if ("features" in geojson) {
+          for (const f of geojson.features) {
+            f.properties = { ...f.properties, iso_n3: String(f.id) };
+          }
+        }
+        if (map.getSource("countries")) return;
+        map.addSource("countries", { type: "geojson", data: geojson });
+        map.addLayer({
+          id: "country-fills",
+          type: "fill",
+          source: "countries",
+          paint: {
+            "fill-color": "transparent",
+            "fill-opacity": 0,
+          },
+        });
+      });
+  }, [mapLoaded]);
 
   useEffect(() => {
     if (!mapLoaded || !mapRef.current) return;
