@@ -32,10 +32,10 @@ export default function Toolbar() {
           <button
             key={cat}
             onClick={() => handleClick(cat)}
-            className={`text-xs px-3 py-1.5 rounded-full transition-all font-medium whitespace-nowrap shrink-0 ${
+            className={`text-xs px-3 py-1.5 rounded-full transition-all font-medium whitespace-nowrap shrink-0 active:scale-95 ${
               isActive
                 ? "text-white"
-                : "text-gray-500 hover:text-gray-300"
+                : "text-gray-500 hover:text-gray-300 active:text-gray-200"
             }`}
             style={
               isActive

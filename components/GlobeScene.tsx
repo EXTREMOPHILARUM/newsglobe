@@ -91,15 +91,25 @@ function NewsDot({
         onMouseEnter={() => setHoveredArticle(article)}
         onMouseLeave={() => setHoveredArticle(null)}
       >
+        {/* Invisible larger hit area for touch */}
+        <div
+          className="absolute z-20"
+          style={{
+            width: 32,
+            height: 32,
+            top: -8,
+            left: -8,
+          }}
+        />
         {/* Pulse ring */}
         <div
           className="absolute inset-0 rounded-full animate-ping opacity-30"
           style={{
             backgroundColor: color,
-            width: 20,
-            height: 20,
-            top: -4,
-            left: -4,
+            width: 28,
+            height: 28,
+            top: -6,
+            left: -6,
           }}
         />
         {/* Glow */}
@@ -108,10 +118,10 @@ function NewsDot({
           style={{
             backgroundColor: color,
             opacity: 0.4,
-            width: 18,
-            height: 18,
-            top: -3,
-            left: -3,
+            width: 24,
+            height: 24,
+            top: -4,
+            left: -4,
           }}
         />
         {/* Dot */}
@@ -119,8 +129,8 @@ function NewsDot({
           className="rounded-full border border-white/30 relative z-10"
           style={{
             backgroundColor: color,
-            width: 12,
-            height: 12,
+            width: 16,
+            height: 16,
             boxShadow: `0 0 8px ${color}, 0 0 20px ${color}40`,
           }}
         />

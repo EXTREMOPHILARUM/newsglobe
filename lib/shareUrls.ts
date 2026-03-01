@@ -33,19 +33,6 @@ const PLATFORMS: Platform[] = [
     shareUrl: (link) =>
       `https://www.reddit.com/submit?url=${encodeURIComponent(link)}&title=${encodeURIComponent(TITLE)}`,
   },
-  {
-    name: "Hacker News",
-    utm_source: "hackernews",
-    utm_medium: "social",
-    shareUrl: (link) =>
-      `https://news.ycombinator.com/submitlink?u=${encodeURIComponent(link)}&t=${encodeURIComponent(TITLE)}`,
-  },
-  {
-    name: "Product Hunt",
-    utm_source: "producthunt",
-    utm_medium: "referral",
-    shareUrl: (link) => link, // PH doesn't have a submit URL — just copy the link
-  },
 ];
 
 function buildUtmUrl(source: string, medium: string): string {

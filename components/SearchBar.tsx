@@ -27,11 +27,12 @@ export default function SearchBar() {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Search news..."
+          enterKeyHint="search"
           className="bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 text-sm text-white placeholder-gray-500 w-full md:w-64 focus:outline-none focus:border-white/30 transition-colors"
         />
         <button
           type="submit"
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors text-sm"
+          className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white active:text-white transition-colors text-sm min-w-[44px] min-h-[44px] flex items-center justify-center"
         >
           ↵
         </button>

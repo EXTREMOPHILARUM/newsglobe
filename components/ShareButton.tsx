@@ -7,8 +7,6 @@ const ICONS: Record<string, string> = {
   Twitter: "𝕏",
   LinkedIn: "in",
   Reddit: "r/",
-  "Hacker News": "Y",
-  "Product Hunt": "PH",
 };
 
 export default function ShareButton() {
@@ -39,7 +37,7 @@ export default function ShareButton() {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white/60 hover:text-white hover:border-white/30 transition-colors flex items-center justify-center"
+        className="w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white/60 hover:text-white hover:border-white/30 active:bg-white/10 active:scale-95 transition-colors flex items-center justify-center"
       >
         <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
           <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" />

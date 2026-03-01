@@ -89,9 +89,14 @@ body {
 
 .maplibregl-popup-close-button {
   color: #888 !important;
-  font-size: 18px !important;
-  right: 4px !important;
-  top: 2px !important;
+  font-size: 22px !important;
+  right: 0 !important;
+  top: 0 !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .maplibregl-popup-close-button:hover {

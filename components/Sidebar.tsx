@@ -41,7 +41,7 @@ function ArticleList() {
             <div className="flex items-center gap-2">
               <button
                 onClick={clearCountry}
-                className="text-gray-400 hover:text-white text-xs transition-colors"
+                className="text-gray-400 hover:text-white active:text-white text-xs transition-colors active:scale-95"
               >
                 ← Back
               </button>
@@ -79,7 +79,7 @@ function ArticleList() {
           return (
             <div
               key={article.id}
-              className="block px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
+              className="block px-4 py-3 border-b border-white/5 hover:bg-white/5 active:bg-white/10 transition-colors cursor-pointer active:scale-[0.99]"
               onClick={() => flyToArticle(article)}
               onMouseEnter={() => setHoveredArticle(article)}
               onMouseLeave={() => setHoveredArticle(null)}
@@ -143,7 +143,7 @@ export default function Sidebar() {
       {/* Mobile toggle button */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="fixed bottom-20 right-4 z-50 w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white/60 hover:text-white hover:border-white/30 transition-colors flex items-center justify-center text-lg md:hidden"
+        className="fixed bottom-20 right-4 z-50 w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white/60 hover:text-white hover:border-white/30 active:bg-white/10 active:scale-95 transition-colors flex items-center justify-center text-lg md:hidden"
       >
         {mobileOpen ? "×" : "☰"}
       </button>
