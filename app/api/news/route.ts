@@ -10,6 +10,14 @@ type CustomItem = {
   enclosure?: { url?: string };
 };
 
+/** Parse RSS with a timeout to avoid slow feeds blocking the worker */
+function parseWithTimeout<T>(promise: Promise<T>, ms = 8000): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) => setTimeout(() => reject(new Error("timeout")), ms)),
+  ]);
+}
+
 const parser = new Parser<Record<string, unknown>, CustomItem>({
   customFields: {
     item: [
@@ -169,7 +177,7 @@ async function fetchRegionFeed(
 ): Promise<NewsArticle[]> {
   const feedUrl = `https://news.google.com/rss?hl=${region.hl}&gl=${region.gl}&ceid=${region.ceid}`;
   try {
-    const feed = await parser.parseURL(feedUrl);
+    const feed = await parseWithTimeout(parser.parseURL(feedUrl));
     const items = feed.items.slice(0, maxItems);
     const articles: NewsArticle[] = [];
 
@@ -209,12 +217,17 @@ async function fetchFallbackFeeds(
   country: { lat: number; lng: number; name: string },
   maxItems: number
 ): Promise<NewsArticle[]> {
-  const entries = normalizeFeedEntries(feedUrls);
+  const allEntries = normalizeFeedEntries(feedUrls);
+  // Sample a random subset to avoid worker timeout on large feed lists
+  const MAX_FEEDS = 12;
+  const entries = allEntries.length <= MAX_FEEDS
+    ? allEntries
+    : allEntries.sort(() => Math.random() - 0.5).slice(0, MAX_FEEDS);
   const perFeed = Math.ceil(maxItems / entries.length);
   const results = await Promise.all(
     entries.map(async (entry) => {
       try {
-        const feed = await parser.parseURL(entry.url);
+        const feed = await parseWithTimeout(parser.parseURL(entry.url));
         return feed.items.slice(0, perFeed).map((item) => {
           const title = item.title || "";
           const snippet = item.contentSnippet || item.content || "";
@@ -312,19 +325,24 @@ export async function GET(request: NextRequest) {
     }
 
     return cachedResponse(`country:${country.toUpperCase()}`, async () => {
-      const results: NewsArticle[] = [];
-      if (countryData.gl && countryData.ceid && countryData.hl) {
-        const region: RegionFeed = {
-          gl: countryData.gl, ceid: countryData.ceid, hl: countryData.hl,
-          lat: countryData.lat, lng: countryData.lng, name: countryData.name,
-        };
-        results.push(...await fetchRegionFeed(region, "general", 15));
-      }
-      if (countryData.fallbackFeeds && countryData.fallbackFeeds.length > 0) {
-        const maxFallback = results.length > 0 ? 10 : 20;
-        results.push(...await fetchFallbackFeeds(countryData.fallbackFeeds, countryData, maxFallback));
-      }
-      return results;
+      const hasGoogle = !!(countryData.gl && countryData.ceid && countryData.hl);
+      const hasFallback = !!(countryData.fallbackFeeds && countryData.fallbackFeeds.length > 0);
+
+      // Fetch Google News and fallback feeds concurrently
+      const [googleResults, fallbackResults] = await Promise.all([
+        hasGoogle
+          ? fetchRegionFeed(
+              { gl: countryData.gl!, ceid: countryData.ceid!, hl: countryData.hl!,
+                lat: countryData.lat, lng: countryData.lng, name: countryData.name },
+              "general", 15
+            ).catch(() => [] as NewsArticle[])
+          : Promise.resolve([] as NewsArticle[]),
+        hasFallback
+          ? fetchFallbackFeeds(countryData.fallbackFeeds!, countryData, hasGoogle ? 10 : 20)
+              .catch(() => [] as NewsArticle[])
+          : Promise.resolve([] as NewsArticle[]),
+      ]);
+      return [...googleResults, ...fallbackResults];
     });
   }
 
