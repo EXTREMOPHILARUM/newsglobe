@@ -9,7 +9,7 @@ export default function InfoButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-4 left-4 md:right-4 md:left-auto z-50 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white/60 hover:text-white hover:border-white/30 transition-colors flex items-center justify-center text-sm font-serif italic"
+        className="fixed bottom-20 left-4 md:bottom-4 md:right-4 md:left-auto z-50 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white/60 hover:text-white hover:border-white/30 transition-colors flex items-center justify-center text-sm font-serif italic"
       >
         i
       </button>

@@ -4,7 +4,6 @@ import { useRef, useCallback, useEffect, useState } from "react";
 import Map, {
   Marker,
   Popup,
-  NavigationControl,
   MapRef,
   MapLayerMouseEvent,
 } from "react-map-gl/maplibre";
@@ -249,7 +248,7 @@ export default function GlobeScene() {
         maxZoom={18}
         minZoom={1}
       >
-        <NavigationControl position="bottom-left" showCompass={false} />
+
         <DayNightOverlay />
 
         {dots.map((article) => (

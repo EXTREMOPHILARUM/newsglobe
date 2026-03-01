@@ -13,8 +13,28 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://newsglobe.saurabhn.com"),
   title: "NewsGlobe",
-  description: "3D interactive news globe",
+  description: "Real-time trending news from 150 countries on an interactive 3D globe",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/icon.svg",
+  },
+  openGraph: {
+    title: "NewsGlobe",
+    description: "Real-time trending news from 150 countries on an interactive 3D globe",
+    siteName: "NewsGlobe",
+    type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NewsGlobe",
+    description: "Real-time trending news from 150 countries on an interactive 3D globe",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({

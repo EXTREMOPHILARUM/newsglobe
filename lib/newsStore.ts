@@ -101,7 +101,7 @@ export const useNewsStore = create<NewsState>((set, get) => ({
         if (searchQuery && filtered.length > 0) {
           const avgLat = filtered.reduce((s, a) => s + a.lat, 0) / filtered.length;
           const avgLng = filtered.reduce((s, a) => s + a.lng, 0) / filtered.length;
-          pendingFlyTo = { lat: avgLat, lng: avgLng, zoom: 3 };
+          pendingFlyTo = { lat: avgLat, lng: avgLng, zoom: 4 };
         }
 
         set({

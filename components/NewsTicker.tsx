@@ -12,7 +12,10 @@ export default function NewsTicker() {
   return (
     <div className="fixed top-0 left-0 right-0 z-50 h-8 bg-black/80 border-b border-white/10 backdrop-blur-sm overflow-hidden">
       <div className="flex items-center h-full">
-        <span className="bg-red-600 text-white text-[10px] font-bold px-3 h-full flex items-center shrink-0 uppercase tracking-wider">
+        <span className="bg-red-600 text-white text-[10px] font-bold px-3 h-full flex items-center gap-1.5 shrink-0 uppercase tracking-wider">
+          <span className="inline-block w-3 h-3 rounded-full border border-white/40 relative">
+            <span className="absolute inset-0 rounded-full bg-white/20 animate-ping" />
+          </span>
           Live
         </span>
         <div className="overflow-hidden whitespace-nowrap flex-1">
