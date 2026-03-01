@@ -106,6 +106,14 @@ function ArticleList() {
                     </span>
                   </div>
                 </div>
+                {article.thumbnail && (
+                  <img
+                    src={article.thumbnail}
+                    alt=""
+                    className="w-14 h-14 rounded-lg object-cover shrink-0"
+                    loading="lazy"
+                  />
+                )}
               </div>
             </a>
           );

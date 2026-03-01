@@ -15,7 +15,9 @@ const categories: (Category | "all")[] = [
 ];
 
 export default function Toolbar() {
-  const { activeCategory, setActiveCategory, fetchNews } = useNewsStore();
+  const { activeCategory, setActiveCategory, fetchNews, selectedCountry } = useNewsStore();
+
+  if (selectedCountry) return null;
 
   const handleClick = (cat: Category | "all") => {
     setActiveCategory(cat);

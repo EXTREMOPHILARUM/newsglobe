@@ -20,6 +20,7 @@ export interface NewsArticle {
   lng: number;
   regionLat?: number;
   regionLng?: number;
+  thumbnail?: string;
 }
 
 export const CATEGORY_COLORS: Record<Category, string> = {

@@ -3,7 +3,29 @@ import Parser from "rss-parser";
 import { NewsArticle, Category } from "@/lib/types";
 import { COUNTRY_BY_CODE } from "@/lib/countryFeeds";
 
-const parser = new Parser();
+type MediaField = { $?: { url?: string } };
+type CustomItem = {
+  "media:content"?: MediaField;
+  "media:thumbnail"?: MediaField;
+  enclosure?: { url?: string };
+};
+
+const parser = new Parser<Record<string, unknown>, CustomItem>({
+  customFields: {
+    item: [
+      ["media:content", "media:content"],
+      ["media:thumbnail", "media:thumbnail"],
+    ],
+  },
+});
+
+function extractThumbnail(item: CustomItem): string | undefined {
+  const mediaUrl = item["media:content"]?.$?.url || item["media:thumbnail"]?.$?.url;
+  if (mediaUrl) return mediaUrl;
+  const encUrl = item.enclosure?.url;
+  if (encUrl && typeof encUrl === "string" && /\.(jpg|jpeg|png|webp|gif)/i.test(encUrl)) return encUrl;
+  return undefined;
+}
 
 // --- Topic feeds (US-centric, used when a specific category is selected) ---
 
@@ -145,6 +167,7 @@ async function fetchRegionFeed(
         lng: region.lng,
         regionLat: region.lat,
         regionLng: region.lng,
+        thumbnail: extractThumbnail(item),
       });
     }
     return articles;
@@ -179,6 +202,7 @@ async function fetchFallbackFeeds(
             lng: country.lng,
             regionLat: country.lat,
             regionLng: country.lng,
+            thumbnail: extractThumbnail(item),
           };
         });
       } catch {
@@ -202,6 +226,7 @@ async function cachedResponse(cacheKey: string, fetchData: () => Promise<NewsArt
   }
 
   const articles = await fetchData();
+  articles.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
   const response = NextResponse.json(articles);
   response.headers.set("Cache-Control", `s-maxage=${CACHE_TTL_SECONDS}`);
 
@@ -301,6 +326,7 @@ export async function GET(request: NextRequest) {
           lng: region.lng,
           regionLat: region.lat,
           regionLng: region.lng,
+          thumbnail: extractThumbnail(item),
         });
       }
       return articles;
@@ -328,6 +354,7 @@ export async function GET(request: NextRequest) {
           lng: -98.5,
           regionLat: 39.8,
           regionLng: -98.5,
+          thumbnail: extractThumbnail(item),
         });
       }
       return articles;
