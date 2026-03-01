@@ -279,7 +279,7 @@ export async function GET(request: NextRequest) {
       );
       return results.filter((r): r is RawFeedResponse => r !== null);
 
-    } else if (topic !== "general" && topic !== "world") {
+    } else if (topic !== "general") {
       // Topic feed — single fetch, allow longer timeout
       const feedUrl = TOPIC_FEEDS[topic] || TOPIC_FEEDS.general;
       const result = await fetchRawFeed(feedUrl, {

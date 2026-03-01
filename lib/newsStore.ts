@@ -141,7 +141,7 @@ export const useNewsStore = create<NewsState>((set, get) => ({
       if (userCountry) params.set("loc", userCountry);
 
       // For search/topic queries, fetch all at once (no batching)
-      if (searchQuery || (activeCategory !== "all" && activeCategory !== "world")) {
+      if (searchQuery || activeCategory !== "all") {
         // When searching, don't pass topic — Google News search doesn't support it
         if (searchQuery) params.delete("topic");
         const res = await fetch(`/api/news?${params.toString()}`);
