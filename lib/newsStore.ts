@@ -1,5 +1,17 @@
 import { create } from "zustand";
 import { NewsArticle, Category } from "./types";
+import { COUNTRY_BY_CODE } from "./countryFeeds";
+
+interface SelectedCountry {
+  code: string;
+  name: string;
+}
+
+interface FlyToTarget {
+  lat: number;
+  lng: number;
+  zoom: number;
+}
 
 interface NewsState {
   articles: NewsArticle[];
@@ -9,10 +21,17 @@ interface NewsState {
   loading: boolean;
   error: string | null;
   hoveredArticle: NewsArticle | null;
+  selectedCountry: SelectedCountry | null;
+  countryArticles: NewsArticle[];
+  countryLoading: boolean;
+  pendingFlyTo: FlyToTarget | null;
+  flyToVersion: number;
   setActiveCategory: (cat: Category | "all") => void;
   setSearchQuery: (q: string) => void;
   setHoveredArticle: (a: NewsArticle | null) => void;
   fetchNews: () => Promise<void>;
+  selectCountry: (code: string, name: string) => Promise<void>;
+  clearCountry: () => void;
 }
 
 function filterArticles(
@@ -43,6 +62,11 @@ export const useNewsStore = create<NewsState>((set, get) => ({
   loading: false,
   error: null,
   hoveredArticle: null,
+  selectedCountry: null,
+  countryArticles: [],
+  countryLoading: false,
+  pendingFlyTo: null,
+  flyToVersion: 0,
 
   setActiveCategory: (cat) => {
     set({ activeCategory: cat });
@@ -68,13 +92,53 @@ export const useNewsStore = create<NewsState>((set, get) => ({
       const res = await fetch(`/api/news?${params.toString()}`);
       if (!res.ok) throw new Error("Failed to fetch news");
       const data: NewsArticle[] = await res.json();
+      const filtered = filterArticles(data, activeCategory, searchQuery);
+
+      // If searching, fly to the centroid of results
+      let pendingFlyTo: FlyToTarget | null = null;
+      if (searchQuery && filtered.length > 0) {
+        const avgLat = filtered.reduce((s, a) => s + a.lat, 0) / filtered.length;
+        const avgLng = filtered.reduce((s, a) => s + a.lng, 0) / filtered.length;
+        pendingFlyTo = { lat: avgLat, lng: avgLng, zoom: 3 };
+      }
+
       set({
         articles: data,
-        filteredArticles: filterArticles(data, activeCategory, searchQuery),
+        filteredArticles: filtered,
         loading: false,
+        pendingFlyTo,
+        flyToVersion: pendingFlyTo ? get().flyToVersion + 1 : get().flyToVersion,
       });
     } catch (e) {
       set({ error: (e as Error).message, loading: false });
     }
+  },
+
+  selectCountry: async (code, name) => {
+    const coords = COUNTRY_BY_CODE.get(code.toUpperCase());
+    set({
+      selectedCountry: { code, name },
+      countryLoading: true,
+      countryArticles: [],
+      pendingFlyTo: coords ? { lat: coords.lat, lng: coords.lng, zoom: 4 } : null,
+      flyToVersion: coords ? get().flyToVersion + 1 : get().flyToVersion,
+    });
+    try {
+      const res = await fetch(`/api/news?country=${encodeURIComponent(code)}`);
+      if (!res.ok) throw new Error("Failed to fetch country news");
+      const data: NewsArticle[] = await res.json();
+      set({ countryArticles: data, countryLoading: false });
+    } catch {
+      set({ countryLoading: false });
+    }
+  },
+
+  clearCountry: () => {
+    set({
+      selectedCountry: null,
+      countryArticles: [],
+      pendingFlyTo: { lat: 30, lng: 20, zoom: 1.8 },
+      flyToVersion: get().flyToVersion + 1,
+    });
   },
 }));

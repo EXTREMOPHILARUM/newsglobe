@@ -17,25 +17,59 @@ function timeAgo(date: string): string {
 }
 
 export default function Sidebar() {
-  const { filteredArticles, loading, setHoveredArticle } = useNewsStore();
-  const items = filteredArticles.slice(0, 15);
+  const {
+    filteredArticles,
+    loading,
+    setHoveredArticle,
+    selectedCountry,
+    countryArticles,
+    countryLoading,
+    clearCountry,
+  } = useNewsStore();
+
+  const isCountryView = !!selectedCountry;
+  const items = isCountryView
+    ? countryArticles.slice(0, 20)
+    : filteredArticles.slice(0, 15);
+  const isLoading = isCountryView ? countryLoading : loading;
 
   return (
     <div className="fixed right-4 top-12 bottom-20 w-80 z-40 flex flex-col bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden max-md:hidden">
       <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-          <span className="text-white text-xs font-semibold uppercase tracking-wider">
-            Live Feed
-          </span>
-        </div>
-        <span className="text-gray-500 text-[10px]">
-          {filteredArticles.length} stories
-        </span>
+        {isCountryView ? (
+          <>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={clearCountry}
+                className="text-gray-400 hover:text-white text-xs transition-colors"
+              >
+                ← Back
+              </button>
+              <span className="text-white text-xs font-semibold uppercase tracking-wider">
+                {selectedCountry.name}
+              </span>
+            </div>
+            <span className="text-gray-500 text-[10px]">
+              {countryArticles.length} stories
+            </span>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              <span className="text-white text-xs font-semibold uppercase tracking-wider">
+                Live Feed
+              </span>
+            </div>
+            <span className="text-gray-500 text-[10px]">
+              {filteredArticles.length} stories
+            </span>
+          </>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-thin">
-        {loading && items.length === 0 && (
+        {isLoading && items.length === 0 && (
           <div className="flex items-center justify-center h-32">
             <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
           </div>
