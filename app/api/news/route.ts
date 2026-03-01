@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     const feed = await parser.parseURL(feedUrl);
     const items = feed.items.slice(0, 50);
 
-    // Geocode sequentially (Nominatim rate limit: 1 req/sec)
+    // Geocode sequentially (Nominatim rate limit: 1 req/sec, but cached lookups are instant)
     const articles: NewsArticle[] = [];
     for (const item of items) {
       const title = item.title || "";

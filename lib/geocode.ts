@@ -143,16 +143,15 @@ export async function geocode(
     const cached = nominatimCache.get(best.key.toLowerCase().trim());
     if (cached !== undefined) {
       if (cached) {
-        return jitter(cached);
+        return jitter(cached, best.key);
       }
-      // Nominatim returned nothing for this before, use static fallback
       return staticFallback(best.key);
     }
 
     // Not cached — try Nominatim (will take ~1.1s due to rate limit)
     const result = await nominatimGeocode(best.key);
     if (result) {
-      return jitter(result);
+      return jitter(result, best.key);
     }
   }
 
@@ -164,14 +163,62 @@ function staticFallback(
 ): { lat: number; lng: number } | null {
   const loc = LOCATIONS[key];
   if (!loc) return null;
-  return jitter(loc);
+  return jitter(loc, key);
 }
 
+// Coastal cities where jitter should push inland only
+const COASTAL_BIAS: Record<string, { latDir: number; lngDir: number }> = {
+  mumbai: { latDir: 1, lngDir: 1 },     // push NE (inland)
+  chennai: { latDir: 1, lngDir: 1 },
+  "hong kong": { latDir: 1, lngDir: 1 },
+  shanghai: { latDir: 1, lngDir: -1 },
+  tokyo: { latDir: 1, lngDir: -1 },
+  sydney: { latDir: -1, lngDir: -1 },
+  "new york": { latDir: 1, lngDir: 1 },
+  miami: { latDir: 1, lngDir: 1 },
+  "los angeles": { latDir: 1, lngDir: 1 },
+  "san francisco": { latDir: 1, lngDir: 1 },
+  london: { latDir: 0, lngDir: 0 },      // inland enough
+  dubai: { latDir: 1, lngDir: 1 },
+  "tel aviv": { latDir: 1, lngDir: 1 },
+  singapore: { latDir: 1, lngDir: 0 },
+  istanbul: { latDir: 0, lngDir: 1 },
+  lagos: { latDir: 1, lngDir: 1 },
+  jakarta: { latDir: -1, lngDir: 1 },
+  manila: { latDir: 1, lngDir: 1 },
+  lima: { latDir: -1, lngDir: 1 },
+  "rio de janeiro": { latDir: -1, lngDir: 1 },
+  "cape town": { latDir: -1, lngDir: 1 },
+  lisbon: { latDir: 1, lngDir: 1 },
+  barcelona: { latDir: 1, lngDir: -1 },
+  "gaza": { latDir: 1, lngDir: 1 },
+};
+
 function jitter(
-  coords: { lat: number; lng: number }
+  coords: { lat: number; lng: number },
+  locationKey?: string
 ): { lat: number; lng: number } {
+  const amount = 0.08; // ~9km, reduced from 0.15
+  const bias = locationKey ? COASTAL_BIAS[locationKey.toLowerCase()] : undefined;
+
+  let latOff: number;
+  let lngOff: number;
+
+  if (bias) {
+    // Bias jitter toward inland direction
+    latOff = bias.latDir === 0
+      ? (Math.random() - 0.5) * amount
+      : Math.abs(Math.random() * amount) * bias.latDir;
+    lngOff = bias.lngDir === 0
+      ? (Math.random() - 0.5) * amount
+      : Math.abs(Math.random() * amount) * bias.lngDir;
+  } else {
+    latOff = (Math.random() - 0.5) * amount;
+    lngOff = (Math.random() - 0.5) * amount;
+  }
+
   return {
-    lat: coords.lat + (Math.random() - 0.5) * 0.15,
-    lng: coords.lng + (Math.random() - 0.5) * 0.15,
+    lat: coords.lat + latOff,
+    lng: coords.lng + lngOff,
   };
 }
