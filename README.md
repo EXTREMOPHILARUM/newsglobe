@@ -73,3 +73,13 @@ public/
   countries-110m.json   — TopoJSON country polygons for click detection
   land-110m.json        — TopoJSON landmass
 ```
+
+## Credits & Data Sources
+
+- **[Google News RSS](https://news.google.com/)** — primary news feed for countries with Google News editions
+- **[news-feed-list-of-countries](https://github.com/yavuz/news-feed-list-of-countries)** — fallback RSS feed URLs for countries without Google News
+- **[Natural Earth](https://www.naturalearthdata.com/)** — TopoJSON country polygons and landmass data (via [world-atlas](https://github.com/topojson/world-atlas))
+- **[CARTO](https://carto.com/basemaps/)** — Dark Matter basemap tiles
+- **[Nominatim / OpenStreetMap](https://nominatim.openstreetmap.org/)** — geocoding
+- **[city-timezones](https://github.com/kevinroberts/city-timezones)** — 7,000+ city database for client-side geocoding
+- **[Polyglobe](https://pizz.watch/polyglobe)** — inspiration for the spinning globe concept
