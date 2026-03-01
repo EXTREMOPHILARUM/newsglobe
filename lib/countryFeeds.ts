@@ -42,6 +42,58 @@ export const COUNTRIES: CountryData[] = [
       },
       { url: "http://www.latimes.com/rss2.0.xml", name: "Los Angeles Times" },
       { url: "http://www.yardbarker.com/rss/rumors", name: "Yardbarker.com" },
+      { url: "http://www.forbes.com/business/feed2/", name: "Forbes" },
+      {
+        url: "http://www.cnbc.com/id/100003114/device/rss/rss.html",
+        name: "CNBC",
+      },
+      {
+        url: "http://www.usmagazine.com/celebrity_news/rss",
+        name: "UsMagazine.com",
+      },
+      {
+        url: "http://www.cbssports.com/partners/feeds/rss/home_news",
+        name: "CBSSports.com",
+      },
+      { url: "http://feeds.slate.com/slate", name: "Slate Magazine" },
+      { url: "http://nypost.com/news/feed/", name: "New York Post" },
+      {
+        url: "http://feeds.marketwatch.com/marketwatch/marketpulse/",
+        name: "MarketWatch",
+      },
+      {
+        url: "http://www.npr.org/rss/rss.php?id=1004",
+        name: "NPR : National Public Radio",
+      },
+      {
+        url: "http://www.sfgate.com/bayarea/feed/bay-area-news-429.php",
+        name: "SFGate",
+      },
+      { url: "http://time.com/feed/", name: "TIME.com" },
+      { url: "http://seekingalpha.com/feed.xml", name: "Seeking Alpha" },
+      {
+        url: "http://rss.csmonitor.com/feeds/csm",
+        name: "The Christian Science Monitor",
+      },
+      { url: "http://techcrunch.com/feed/", name: "TechCrunch" },
+      { url: "http://feeds.feedburner.com/breitbart", name: "Breitbart" },
+      {
+        url: "https://www.huffpost.com/section/world-news/feed",
+        name: "World News - Breaking News, Top Stories",
+      },
+      {
+        url: "https://www.latimes.com/world-nation/rss2.0.xml",
+        name: "World & Nation",
+      },
+      {
+        url: "https://news.yahoo.com/rss/mostviewed",
+        name: "Yahoo News - Latest News & Headlines",
+      },
+      {
+        url: "https://www.cnbc.com/id/100003114/device/rss/rss.html",
+        name: "US Top News and Analysis",
+      },
+      { url: "https://rss.politico.com/playbook.xml", name: "Playbook" },
     ],
   },
   {
@@ -58,6 +110,41 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://feeds.bbci.co.uk/news/england/rss.xml", name: "BBC News" },
       { url: "http://www1.skysports.com/rss/11095", name: "Sky Sports" },
       { url: "http://www.mirror.co.uk/news/rss.xml", name: "Mirror" },
+      { url: "http://metro.co.uk/feed/", name: "Metro" },
+      { url: "http://www.ft.com/rss/world", name: "Financial Times" },
+      { url: "http://www.dailyrecord.co.uk/rss.xml", name: "Daily Record" },
+      {
+        url: "http://www.manchestereveningnews.co.uk/?service=rss",
+        name: "Manchester Evening News",
+      },
+      {
+        url: "http://www.standard.co.uk/news/rss/",
+        name: "London Evening Standard",
+      },
+      {
+        url: "http://www.walesonline.co.uk/news/wales-news/rss.xml",
+        name: "WalesOnline",
+      },
+      {
+        url: "http://www.expressandstar.com/news/feed/",
+        name: "Express & Star",
+      },
+      {
+        url: "https://www.theguardian.com/world/rss",
+        name: "World news | The Guardian",
+      },
+      {
+        url: "https://www.dailymail.co.uk/home/index.rss",
+        name: "Home | Mail Online",
+      },
+      {
+        url: "http://www.independent.co.uk/news/uk/rss",
+        name: "The Independent",
+      },
+      {
+        url: "http://feeds.feedburner.com/daily-express-news-showbiz",
+        name: "Daily Express :: News Feed",
+      },
     ],
   },
   {
@@ -848,6 +935,24 @@ export const COUNTRIES: CountryData[] = [
         url: "https://www.abc.net.au/news/feed/1948/rss.xml",
         name: "ABC News",
       },
+      {
+        url: "https://www.theage.com.au/rss/feed.xml",
+        name: "The Age - Latest News",
+      },
+      { url: "https://www.perthnow.com.au/news/feed", name: "PerthNow" },
+      {
+        url: "https://www.canberratimes.com.au/rss.xml",
+        name: "The Canberra Times - Local News",
+      },
+      {
+        url: "https://www.brisbanetimes.com.au/rss/feed.xml",
+        name: "Brisbane Times - Latest News",
+      },
+      {
+        url: "https://www.businessnews.com.au/rssfeed/latest.rss",
+        name: "Business News - Latest Headlines",
+      },
+      { url: "https://www.michaelwest.com.au/feed/", name: "Michael West" },
     ],
   },
   {
@@ -864,6 +969,49 @@ export const COUNTRIES: CountryData[] = [
       { url: "https://nationalpost.com/feed/", name: "National Post" },
       { url: "https://torontosun.com/category/news/feed", name: "Toronto Sun" },
       { url: "https://globalnews.ca/feed/", name: "Global News" },
+      { url: "https://calgaryherald.com/feed", name: "Calgary Herald" },
+      { url: "https://torontosun.com/feed/", name: "Vancouver Sun" },
+      { url: "https://edmontonjournal.com/feed/", name: "Edmonton Journal" },
+      { url: "https://ottawacitizen.com/feed/", name: "Ottawa Citizen" },
+      { url: "https://montrealgazette.com/feed/", name: "Montreal Gazette" },
+      { url: "https://edmontonsun.com/feed", name: "Edmonton Sun" },
+      { url: "https://calgarysun.com/feed", name: "Calgary Sun" },
+      { url: "https://o.canada.com/feed/", name: "Canada.com" },
+      { url: "https://toronto.citynews.ca/feed/", name: "City News Toronto" },
+      {
+        url: "http://feeds.feedburner.com/FP_TopStories",
+        name: "Financial Post",
+      },
+      { url: "https://theprovince.com/feed/", name: "Province" },
+      { url: "https://thestarphoenix.com/feed/", name: "The Star Phoenix" },
+      {
+        url: "http://www.journaldemontreal.com/accueil/rss.xml",
+        name: "Le Journal de Montreal",
+      },
+      {
+        url: "https://www.winnipegfreepress.com/breakingnews/feed",
+        name: "Winnipeg Free Press",
+      },
+      { url: "https://windsorstar.com/feed", name: "Windsor Star" },
+      { url: "https://thetyee.ca/rss2.xml", name: "The Tyee" },
+      {
+        url: "https://www.nationalobserver.com/front/rss",
+        name: "The National Observer",
+      },
+      { url: "https://www.biv.com/rss", name: "Business in Vancouver" },
+      { url: "https://leaderpost.com/feed/", name: "Regina Leader" },
+      {
+        url: "https://www.dailyheraldtribune.com/feed",
+        name: "Grande Prairie Daily Herald",
+      },
+      {
+        url: "https://www.journaldequebec.com/rss.xml",
+        name: "Le Journal de Quebec",
+      },
+      {
+        url: "https://business.financialpost.com/feed/",
+        name: "Financial Post",
+      },
     ],
   },
   {
@@ -886,6 +1034,17 @@ export const COUNTRIES: CountryData[] = [
         url: "http://www.faz.net/rss/aktuell/",
         name: "Frankfurter Allgemeine",
       },
+      {
+        url: "http://www.abendblatt.de/?service=Rss",
+        name: "Hamburger Abendblatt",
+      },
+      { url: "http://www.rp-online.de/feed.rss", name: "RP ONLINE" },
+      { url: "http://www.tagesschau.de/xml/rss2", name: "ARD Tagesschau" },
+      {
+        url: "http://www.handelsblatt.com/contentexport/feed/schlagzeilen",
+        name: "Handelsblatt",
+      },
+      { url: "https://www.faz.net/rss/aktuell/", name: "Aktuell - FAZ.NET" },
     ],
   },
   {
@@ -907,6 +1066,56 @@ export const COUNTRIES: CountryData[] = [
       {
         url: "https://feeds.leparisien.fr/leparisien/rss",
         name: "Le Parisien",
+      },
+      {
+        url: "https://www.diplomatie.gouv.fr/spip.php?page=backend-fd",
+        name: "France Diplomacy",
+      },
+      {
+        url: "https://www.liberation.fr/arc/outboundfeeds/rss-all/?outputType=xml",
+        name: "Liberation",
+      },
+      { url: "https://www.mediapart.fr/articles/feed", name: "Mediapart" },
+      { url: "https://www.thelocal.fr/feeds/rss.php", name: "The Local" },
+      { url: "https://www.20minutes.fr/feeds/rss-une.xml", name: "20 Minutes" },
+      { url: "https://dwh.lequipe.fr/api/edito/rss?path=/", name: "L'Équipe" },
+      { url: "https://www.humanite.fr/rss", name: "L'Humanité" },
+      { url: "https://www.la-croix.com/rss", name: "La Croix" },
+      {
+        url: "https://www.nouvelobs.com/rss.xml",
+        name: "Le Nouvel Obs (L'Obs)",
+      },
+      { url: "https://www.leprogres.fr/rss", name: "Le Progrès" },
+      {
+        url: "https://www.dna.fr/rss",
+        name: "Les Dernières Nouvelles d'Alsace (DNA)",
+      },
+      { url: "https://www.francetvinfo.fr/titres.rss", name: "Franceinfo" },
+      { url: "https://www.ouest-france.fr/rss/france", name: "Ouest France" },
+      { url: "https://www.france24.com/en/rss", name: "france24.com" },
+      {
+        url: "https://www.nouvelobs.com/a-la-une/rss.xml",
+        name: "L'Obs - A la une",
+      },
+      {
+        url: "https://www.huffingtonpost.fr/feeds/index.xml",
+        name: "Le Huffington Post",
+      },
+      {
+        url: "https://www.ladepeche.fr/rss.xml",
+        name: "La Dépêche du Midi : actualités et info en direct de la région Occitanie et des environs - ladepeche.fr",
+      },
+      {
+        url: "https://www.diplomatie.gouv.fr/spip.php?page=backend-fd&lang=en",
+        name: "Ministry for Europe and Foreign Affairs - Actualités",
+      },
+      {
+        url: "https://www.sudouest.fr/essentiel/rss.xml",
+        name: "L&#039;essentiel",
+      },
+      {
+        url: "https://www.ouest-france.fr/rss-en-continu.xml",
+        name: "Ouest-France - Actualité",
       },
     ],
   },
@@ -936,6 +1145,16 @@ export const COUNTRIES: CountryData[] = [
         url: "https://www.japantimes.co.jp/feed/topstories/",
         name: "Japan Times latest articles",
       },
+      { url: "https://japantoday.com/feed", name: "Japan Today" },
+      { url: "http://www.newsonjapan.com/rss/top.xml", name: "News On Japan" },
+      {
+        url: "http://feeds.feedburner.com/SdJapan",
+        name: "BRIDGE（ブリッジ）テクノロジー＆スタートアップ情報",
+      },
+      {
+        url: "https://news.livedoor.com/topics/rss/top.xml",
+        name: "ライブドアニュース - 主要トピックス",
+      },
     ],
   },
   {
@@ -955,6 +1174,31 @@ export const COUNTRIES: CountryData[] = [
         name: "Estadão",
       },
       { url: "https://ge.globo.com/rss/ge", name: "globoesporte.com" },
+      { url: "https://g1.globo.com/rss/g1/", name: "G1" },
+      { url: "https://extra.globo.com/rss/extra", name: "Extra" },
+      {
+        url: "https://jornaldebrasilia.com.br/feed/",
+        name: "Jornal de Brasília",
+      },
+      {
+        url: "https://www.correio24horas.com.br/rss",
+        name: "Jornal Correio (Correio 24 Horas)",
+      },
+      { url: "https://www.atarde.com.br/rss", name: "A Tarde" },
+      {
+        url: "https://feeds.bbci.co.uk/portuguese/rss.xml",
+        name: "BBC Brasil",
+      },
+      { url: "https://www.cnnbrasil.com.br/rss/", name: "CNN Brasil" },
+      {
+        url: "https://jc.uol.com.br/ultimas/rss.xml",
+        name: "Jornal do Comércio",
+      },
+      {
+        url: "https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml",
+        name: "Agência Brasil",
+      },
+      { url: "https://riotimesonline.com/feed/", name: "The Rio Times" },
     ],
   },
   {
@@ -980,6 +1224,21 @@ export const COUNTRIES: CountryData[] = [
         url: "https://vanguardia.com.mx/rss.xml",
         name: "Lo último en Vanguardia MX",
       },
+      {
+        url: "https://www.elsiglodetorreon.com.mx/index.xml",
+        name: "Portada, El Siglo de Torreón",
+      },
+      {
+        url: "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/?outputType=xml",
+        name: "El Financiero",
+      },
+      {
+        url: "https://www.informador.mx/rss/ultimas-noticias.xml",
+        name: "El Informador :: Noticias de Jalisco, México, Deportes & Entretenimiento",
+      },
+      { url: "https://www.24-horas.mx/feed/", name: "24 Horas" },
+      { url: "https://mexiconewsdaily.com/feed/", name: "Mexico News Daily" },
+      { url: "https://8columnas.com.mx/feed/", name: "8 Columnas" },
     ],
   },
   {
@@ -999,6 +1258,13 @@ export const COUNTRIES: CountryData[] = [
       { url: "https://techcentral.co.za/feed", name: "TechCentral" },
       { url: "https://citizen.co.za/feed/", name: "The Citizen" },
       { url: "https://www.dailymaverick.co.za/dmrss/", name: "Daily Maverick" },
+      { url: "https://www.moneyweb.co.za/feed/", name: "Moneyweb" },
+      { url: "http://rss.iol.io/iol/news", name: "IOL section feed for News" },
+      {
+        url: "https://www.thesouthafrican.com/feed/",
+        name: "The South African",
+      },
+      { url: "https://api.axios.com/feed/", name: "Axios" },
     ],
   },
   {
@@ -1015,11 +1281,29 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://www.informationng.com/feed", name: "Information Nigeria" },
       {
         url: "https://www.nigerianbulletin.com/forums/-/index.rss",
-        name: "Nigeria News Links | Today\'s Updates - Nigerian Bulletin",
+        name: "Nigeria News Links | Today's Updates - Nigerian Bulletin",
       },
       {
         url: "http://feeds.feedburner.com/Nigerianeye",
         name: "Nigerian News. Latest Nigeria News. Your online Nigerian Newspaper.",
+      },
+      { url: "https://www.legit.ng/rss/all.rss", name: "Legit.ng" },
+      {
+        url: "https://thenationonlineng.net/feed/",
+        name: "Latest Nigeria News, Nigerian Newspapers, Politics",
+      },
+      { url: "https://dailypost.ng/feed", name: "Daily Post Nigeria" },
+      {
+        url: "https://www.premiumtimesng.com/feed",
+        name: "Premium Times Nigeria",
+      },
+      {
+        url: "https://www.informationng.com/feed",
+        name: "Information Nigeria",
+      },
+      {
+        url: "https://guardian.ng/feed/",
+        name: "The Guardian Nigeria News – Nigeria and World News",
       },
     ],
   },
@@ -1162,6 +1446,26 @@ export const COUNTRIES: CountryData[] = [
         name: "RG.ru Rossiyskaya Gazeta",
       },
       { url: "http://www.infox.ru/rss.xml", name: "infox.ru" },
+      { url: "http://www.interfax.ru/rss.asp", name: "interfax" },
+      { url: "https://tass.ru/rss/all.xml", name: "TASS" },
+      { url: "https://lenta.ru/rss", name: "Lenta.ru : Новости" },
+      {
+        url: "https://www.mk.ru/rss/index.xml",
+        name: "Все материалы - Московский Комсомолец",
+      },
+      { url: "https://rg.ru/xml/index.xml", name: "Российская Газета" },
+      {
+        url: "https://rss.newsru.com/top/big/",
+        name: "NEWSru.com :: Главные новости",
+      },
+      { url: "https://www.rt.com/rss/", name: "RT - Daily news" },
+      { url: "https://meduza.io/rss/all", name: "Meduza.io" },
+      { url: "http://tass.com/rss/v2.xml", name: "TASS" },
+      {
+        url: "https://www.themoscowtimes.com/rss/news",
+        name: "The Moscow Times - Independent News From Russia",
+      },
+      { url: "https://www.pravdareport.com/export.xml", name: "PravdaReport" },
     ],
   },
   {
@@ -1184,6 +1488,41 @@ export const COUNTRIES: CountryData[] = [
       },
       { url: "http://www.leonardo.it/feed", name: "Leonardo.it" },
       { url: "http://www.ilmessaggero.it/rss/home.xml", name: "Il Messaggero" },
+      {
+        url: "http://www.corrieredellosport.it/rss/Altri-Sport-2.xml",
+        name: "Corriere dello Sport",
+      },
+      {
+        url: "http://www.ilgiornale.it/taxonomy/term/40822/feed",
+        name: "Il Giornale",
+      },
+      {
+        url: "https://www.ansa.it/sito/ansait_rss.xml",
+        name: "RSS di   - ANSA.it",
+      },
+      { url: "https://feeds.thelocal.com/rss/it", name: "The Local" },
+      {
+        url: "https://www.liberoquotidiano.it/rss.xml",
+        name: "Libero Quotidiano",
+      },
+      {
+        url: "https://www.ilmattino.it/?sez=XML&args&p=search&args[box]=Home&limit=20&layout=rss",
+        name: "Il Mattino Web",
+      },
+      {
+        url: "http://rss.adnkronos.com/RSS_PrimaPagina.xml",
+        name: "Adnkronos - ultimoratop",
+      },
+      { url: "https://www.milannews.it/rss/", name: "Milan News" },
+      {
+        url: "https://www.internazionale.it/sitemaps/rss.xml",
+        name: "Internazionale",
+      },
+      { url: "https://www.panorama.it/feeds/feed.rss", name: "Panorama" },
+      {
+        url: "https://www.theguardian.com/world/italy/rss",
+        name: "Italy | The Guardian",
+      },
     ],
   },
   {
@@ -1212,6 +1551,60 @@ export const COUNTRIES: CountryData[] = [
         url: "https://www.lavanguardia.com/rss/home.xml",
         name: "LaVanguardia.com",
       },
+      {
+        url: "https://www.eleconomista.es/rss/rss-seleccion-ee.php",
+        name: "elEconomista.es",
+      },
+      {
+        url: "https://feeds.elpais.com/mrss-s/pages/ep/site/cincodias.elpais.com/section/ultimas-noticias/portada",
+        name: "Cinco Dias",
+      },
+      {
+        url: "https://e00-expansion.uecdn.es/rss/portada.xml",
+        name: "Diario Expansion",
+      },
+      {
+        url: "https://rss.elconfidencial.com/espana/",
+        name: "El Confidencial",
+      },
+      { url: "https://www.eldiario.es/rss", name: "elDiario.es" },
+      { url: "https://okdiario.com/feed", name: "Diario Expansion" },
+      {
+        url: "https://www.elindependiente.com/feed/",
+        name: "El Independiente",
+      },
+      { url: "https://www.eldebate.com/rss/home.xml", name: "El Debate" },
+      { url: "https://www.europapress.es/rss/rss.aspx", name: "Europa Press" },
+      {
+        url: "https://www.elcorreo.com/rss/atom/portada/",
+        name: "elcorreo.com",
+      },
+      {
+        url: "https://www.lavozdegalicia.es/index.xml",
+        name: "La Voz de Galicia",
+      },
+      {
+        url: "https://www.epe.es/es/rss/rss_portada.xml",
+        name: "El Periódico",
+      },
+      { url: "https://www.laregion.es/rss/", name: "La Región" },
+      {
+        url: "https://www.elnortedecastilla.es/rss/atom/portada/",
+        name: "El Norte de Castilla",
+      },
+      { url: "https://e00-marca.uecdn.es/rss/portada.xml", name: "Marca" },
+      {
+        url: "https://www.elperiodico.com/es/rss/rss_portada.xml",
+        name: "El Periódico - portada",
+      },
+      {
+        url: "https://www.huffingtonpost.es/feeds/index.xml",
+        name: "huffingtonpost.es",
+      },
+      {
+        url: "https://www.euroweeklynews.com/feed/",
+        name: "Euro Weekly News Spain",
+      },
     ],
   },
   {
@@ -1228,6 +1621,32 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://wiadomosci.onet.pl/.feed", name: "Onet Wiadomosci" },
       { url: "http://wiadomosci.wp.pl/rss.xml", name: "WP.pl Wiadomosci" },
       { url: "http://www.money.pl/rss/main.xml", name: "Money.pl" },
+      {
+        url: "https://wyborcza.pl/pub/rss/najnowsze_wyborcza.xml",
+        name: "Gazeta Wyborcza",
+      },
+      { url: "https://sport.tvp.pl/sport.tvp.pl/rss+xml.php", name: "TVP" },
+      { url: "https://www.rp.pl/rss_main", name: "Rzeczpospolita" },
+      {
+        url: "http://rss.dziennik.pl/Dziennik-Wiadomosci",
+        name: "Dziennik.pl",
+      },
+      { url: "http://feeds.feedburner.com/wPolitycepl", name: "Najnowsze" },
+      { url: "https://www.newsweek.pl/rss.xml", name: "Newsweek Polska" },
+      {
+        url: "http://rss.dziennik.pl/Dziennik-PL/",
+        name: "Dziennik.pl Dziennik - dziennik.pl",
+      },
+      {
+        url: "https://www.wirtualnemedia.pl/rss/wirtualnemedia_rss.xml",
+        name: "www.wirtualnemedia.pl",
+      },
+      {
+        url: "http://rss.gazetaprawna.pl/GazetaPrawna",
+        name: "GazetaPrawna.pl - biznes, podatki, prawo, finanse, wiadomości, praca",
+      },
+      { url: "https://www.rp.pl/rss/1019", name: "https://www.rp.pl" },
+      { url: "https://www.rmf24.pl/feed", name: "RMF24.pl" },
     ],
   },
   {
@@ -1244,6 +1663,26 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://kp.ua/rss/feed.xml", name: "Komsomolskaya pravda" },
       { url: "http://obozrevatel.com/rss.xml", name: "Obozrevatel.com" },
       { url: "http://comments.ua/export/rss_ru.xml", name: "comments.ua" },
+      {
+        url: "http://k.img.com.ua/rss/ru/all_news2.0.xml",
+        name: "Последние новости на сайте korrespondent.net",
+      },
+      {
+        url: "https://censor.net.ua/includes/news_ru.xml",
+        name: "Цензор.НЕТ - Новости",
+      },
+      { url: "https://tsn.ua/rss/full.rss", name: "Новини на tsn.ua" },
+      { url: "https://www.pravda.com.ua/rss/", name: "Українська правда" },
+      { url: "https://nv.ua/rss/all.xml", name: "НВ" },
+      {
+        url: "https://rss.unian.net/site/news_rus.rss",
+        name: "Информационное агентство УНИАН",
+      },
+      {
+        url: "https://espreso.tv/rss",
+        name: "Еспресо - український погляд на світ!",
+      },
+      { url: "https://gazeta.ua/rss", name: "Gazeta.ua" },
     ],
   },
   {
@@ -1268,6 +1707,34 @@ export const COUNTRIES: CountryData[] = [
       {
         url: "https://www.cronista.com/files/rss/news.xml",
         name: "El Cronista",
+      },
+      {
+        url: "https://eleconomista.com.ar/ultimas-noticias/feed/",
+        name: "El Economista",
+      },
+      {
+        url: "https://www.lapoliticaonline.com/files/rss/ultimasnoticias.xml",
+        name: "La Politica Online",
+      },
+      { url: "https://www.ole.com.ar/rss/ultimas-noticias", name: "Ole" },
+      {
+        url: "https://feeds.feedburner.com/LaGaceta-General",
+        name: "La Gaceta",
+      },
+      {
+        url: "https://www.lavoz.com.ar/arc/outboundfeeds/feeds/rss/?outputType=xml",
+        name: "La Voz del Interior",
+      },
+      { url: "https://www.eldia.com/.rss", name: "El dia" },
+      { url: "https://elintransigente.com/feed/", name: "El intransigente" },
+      {
+        url: "https://derechadiario.com.ar/rss/last-posts",
+        name: "La Derecha Diario",
+      },
+      { url: "https://www.batimes.com.ar/feed", name: "Buenos Aires Times" },
+      {
+        url: "https://buenosairesherald.com/feed/atom",
+        name: "Buenos Aires Herald",
       },
     ],
   },
@@ -1304,6 +1771,20 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://www.interaksyon.com/rss", name: "InterAksyon" },
       { url: "https://www.inquirer.net/fullfeed", name: "INQUIRER.net" },
       { url: "https://www.interaksyon.com/feed/", name: "Interaksyon" },
+      {
+        url: "https://www.philstar.com/rss/headlines",
+        name: "philstar.com - RSS Headlines",
+      },
+      {
+        url: "https://data.gmanews.tv/gno/rss/news/feed.xml",
+        name: "GMA News Online / News",
+      },
+      {
+        url: "https://www.topgear.com.ph/feed/rss1",
+        name: "Top Gear: The Philippine authority on cars and the automotive industry",
+      },
+      { url: "https://www.unbox.ph/feed/", name: "UNBOX PH" },
+      { url: "https://tonite.abante.com.ph/feed/", name: "Abante Tonite" },
     ],
   },
   {
@@ -1350,6 +1831,23 @@ export const COUNTRIES: CountryData[] = [
         url: "http://www.vol.at/rss/tp:vol:vorarlberg",
         name: "Vorarlberg Online",
       },
+      {
+        url: "http://www.nachrichten.at/storage/rss/rss/wirtschaft.xml",
+        name: "Nachrichten.at",
+      },
+      {
+        url: "http://www.salzburg.com/nachrichten/kategorie/8/rss.xml",
+        name: "Salzburger Nachrichten",
+      },
+      { url: "http://www.tt.com/rss/news.xml", name: "Tiroler Tageszeitung" },
+      {
+        url: "https://www.laola1.at/templates/generated/1/xml/rss/newsRSS.xml",
+        name: "LAOLA1.at",
+      },
+      {
+        url: "http://www.vienna.at/rss/om:vienna:bezirk:1200",
+        name: "Vienna.at",
+      },
     ],
   },
   {
@@ -1369,6 +1867,7 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://www.srf.ch/sport/bnf/rss/718", name: "SRF Sport" },
       { url: "http://www.24heures.ch/rss.html", name: "24 heures" },
       { url: "http://www.bernerzeitung.ch/rss.html", name: "Berner Zeitung" },
+      { url: "http://www.tdg.ch/rss.html", name: "Tribune de Geneve" },
     ],
   },
   {
@@ -1391,6 +1890,7 @@ export const COUNTRIES: CountryData[] = [
         name: "RTBF",
       },
       { url: "https://www.hln.be/home/rss.xml", name: "HLN" },
+      { url: "https://www.7sur7.be/home/rss.xml", name: "7sur7" },
     ],
   },
   {
@@ -1407,6 +1907,7 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://www.ad.nl/rss.xml", name: "AD.nl" },
       { url: "http://www.volkskrant.nl/sport/rss.xml", name: "Volkskrant" },
       { url: "https://www.nrc.nl/rss/", name: "NRC" },
+      { url: "http://www.omroepbrabant.nl/rss/", name: "Omroep Brabant" },
     ],
   },
   {
@@ -1432,6 +1933,21 @@ export const COUNTRIES: CountryData[] = [
         name: "IrishCentral",
       },
       { url: "http://www.donegaldaily.com/feed/", name: "Donegal Daily" },
+      { url: "http://www.highlandradio.com/feed/", name: "Highland Radio" },
+      { url: "https://www.thejournal.ie/feed/", name: "TheJournal.ie" },
+      {
+        url: "https://feeds.breakingnews.ie/bntopstories",
+        name: "All: BreakingNews.ie",
+      },
+      { url: "https://www.the42.ie/feed/", name: "The42" },
+      {
+        url: "https://feeds.feedburner.com/ietopstories",
+        name: "IrishExaminer.com",
+      },
+      {
+        url: "https://www.irishmirror.ie/?service=rss",
+        name: "Irish Mirror - Home",
+      },
     ],
   },
   {
@@ -1451,6 +1967,26 @@ export const COUNTRIES: CountryData[] = [
       { url: "https://www.cmjornal.pt/rss", name: "Correio da Manhã" },
       { url: "https://www.record.pt/rss/", name: "Jornal Record" },
       { url: "https://tvi.iol.pt/rss.xml", name: "TVI" },
+      {
+        url: "https://www.noticiasaominuto.com.br/rss/ultima-hora",
+        name: "Notícias ao Minuto",
+      },
+      { url: "https://www.iol.pt/rss.xml", name: "IOL" },
+      {
+        url: "https://www.jornaldenegocios.pt/rss",
+        name: "Jornal de Negocios",
+      },
+      { url: "https://observador.pt/rss/", name: "Observador" },
+      {
+        url: "https://feeds.feedburner.com/asbeiras",
+        name: "Diário As Beiras",
+      },
+      { url: "https://www.diariocoimbra.pt/feed/", name: "Diário de Coimbra" },
+      { url: "https://ominho.pt/feed", name: "O Minho" },
+      {
+        url: "https://www.avozdetrasosmontes.pt/feed",
+        name: "A Voz de Trás-os-Montes",
+      },
     ],
   },
   {
@@ -1470,6 +2006,7 @@ export const COUNTRIES: CountryData[] = [
         url: "http://www.sydsvenskan.se/rss.xml?type=section&id=528225",
         name: "Sydsvenskan",
       },
+      { url: "http://rss.nwt.se/nwtse_karlstad", name: "nwt.se" },
     ],
   },
   {
@@ -1489,6 +2026,8 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://www.tv2.no/rss/tv2nyhetene-siste.xml", name: "TV2" },
       { url: "http://www.aftenposten.no/rss/", name: "Aftenposten" },
       { url: "http://e24.no/rss/", name: "E24" },
+      { url: "http://www.bt.no/rss/", name: "Bergens Tidende" },
+      { url: "http://www.aftenbladet.no/rss/", name: "Stavanger Aftenbladet" },
     ],
   },
   {
@@ -1505,6 +2044,22 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://www.sport.cz/rss2/", name: "Sport.cz" },
       { url: "http://www.blesk.cz/rss/", name: "Blesk.cz" },
       { url: "http://zpravy.aktualne.cz/rss/", name: "Aktualne.cz" },
+      { url: "http://www.denik.cz/rss/sport.html", name: "Denik.cz" },
+      {
+        url: "http://servis.lidovky.cz/rss.aspx?c=ln_lidovky",
+        name: "Lidovky.cz",
+      },
+      {
+        url: "http://feeds.feedburner.com/penize?format=xml",
+        name: "Penize.cz",
+      },
+      { url: "http://ihned.cz/?p=000000_rss", name: "IHNED.cz" },
+      {
+        url: "http://www.kurzy.cz/zpravy/util/forext.dat?type=rss",
+        name: "Kurzy.cz",
+      },
+      { url: "http://www.ahaonline.cz/rss.php", name: "Aha!" },
+      { url: "http://www.showbiz.cz/feed/", name: "ShowBiz.cz" },
     ],
   },
   {
@@ -1521,6 +2076,19 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://www.pluska.sk/rss.xml", name: "Pluska.sk" },
       { url: "http://hnonline.sk/rss/1", name: "HNonline.sk" },
       { url: "http://openiazoch.zoznam.sk/rss.asp", name: "oPeniazoch.sk" },
+      { url: "http://sport.aktuality.sk/rss/", name: "Sport.sk" },
+      {
+        url: "http://www.webnoviny.sk/rss/rss-trenciansky-kraj.rss",
+        name: "Webnoviny.sk",
+      },
+      {
+        url: "https://spravy.stvr.sk/feed/",
+        name: "Slovenská televízia a rozhlas (STVR)",
+      },
+      {
+        url: "https://www.teraz.sk/rss/rss-vsetky-spravy.rss",
+        name: "TERAZ.sk",
+      },
     ],
   },
   {
@@ -1537,6 +2105,7 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://www.blikk.hu/rss/blikk", name: "Blikk" },
       { url: "http://velvet.hu/24ora/rss/", name: "Velvet" },
       { url: "http://sportgeza.hu/24ora/rss/", name: "Sport Geza" },
+      { url: "http://nepszava.hu/rss/", name: "Nepszava" },
     ],
   },
   {
@@ -1553,6 +2122,12 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://rss.stirileprotv.ro/", name: "Stirile Pro TV" },
       { url: "http://www.ziare.com/rss/actualitate.xml", name: "Ziare.com" },
       { url: "http://jurnalul.ro/rss", name: "jurnalul.ro" },
+      { url: "http://www.gsp.ro/rss.xml", name: "Gazeta Sporturilor" },
+      {
+        url: "http://www.tvr.ro/rss/stiri.xml",
+        name: "Televiziunea Română (TVR)",
+      },
+      { url: "https://www.biziday.ro/feed/", name: "biziday" },
     ],
   },
   {
@@ -1569,6 +2144,8 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://dariknews.bg/rss.php", name: "Darik News" },
       { url: "http://www.24chasa.bg/RSS.asp", name: "24 Chasa" },
       { url: "http://www.dnevnik.bg/rss/", name: "Dnevnik" },
+      { url: "http://rss.actualno.com/2", name: "Actualno" },
+      { url: "http://gong.bg/rss.php", name: "gong.bg" },
     ],
   },
   {
@@ -1588,6 +2165,13 @@ export const COUNTRIES: CountryData[] = [
         url: "http://crittendenpress.blogspot.com/feeds/posts/default?alt=rss",
         name: "Press Online",
       },
+      { url: "http://www.naslovi.net/rss/politika/", name: "naslovi.net" },
+      { url: "http://www.danas.rs/rss/rss.asp?column_id=0", name: "Danas" },
+      {
+        url: "http://www.pirotskevesti.rs/sport/13135/feed/",
+        name: "Vesti.rs",
+      },
+      { url: "https://n1info.rs/feed/", name: "Televizija N1" },
     ],
   },
   {
@@ -1655,6 +2239,12 @@ export const COUNTRIES: CountryData[] = [
         name: "Proto Thema",
       },
       { url: "http://www.tanea.gr/rss.axd?pgid=1", name: "Ta Nea" },
+      { url: "http://www.skai.gr/rss/top.aspx", name: "SKAI.gr" },
+      { url: "http://www.tovima.gr/feed/politics/", name: "To Vima" },
+      {
+        url: "http://www.megatv.com/rss.asp?catid=13480&subid=20120",
+        name: "MEGA",
+      },
     ],
   },
   {
@@ -1695,6 +2285,25 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://www.mynet.com/haber/rss/sondakika", name: "mynet haber" },
       { url: "http://www.haberturk.com/haberturk.xml", name: "Haber Turk" },
       { url: "http://sondakika.haber7.com/sondakika.rss", name: "haber7.com" },
+      {
+        url: "http://rss.haberler.com/rsskonu.asp?konu=guncel",
+        name: "Haberler.com",
+      },
+      {
+        url: "http://www.internethaber.com/rss/last_min.xml",
+        name: "InternetHaber.com",
+      },
+      { url: "http://www.ensonhaber.com/rss.xml", name: "En Son Haber" },
+      { url: "http://www.fotomac.com.tr/rss/besiktas.xml", name: "FotoMac" },
+      { url: "http://www.sporx.com/_xml/rss.php", name: "sporx" },
+      { url: "http://www.stargazete.com/rss/rss.asp", name: "STAR" },
+      {
+        url: "http://www.cumhuriyet.com.tr/rss/son_dakika.xml",
+        name: "Cumhuriyet.com.tr: Son Dakika",
+      },
+      { url: "http://www.yenisafak.com.tr/rss/", name: "Yeni Safak" },
+      { url: "http://www.star.com.tr/rss/rss.asp", name: "STARGAZETE.COM" },
+      { url: "http://www.aktifhaber.com/rss/", name: "Aktif Haber" },
     ],
   },
   {
@@ -1826,6 +2435,13 @@ export const COUNTRIES: CountryData[] = [
         url: "https://nation.com.pk/rss/top-stories",
         name: "The Nation - Top Stories",
       },
+      { url: "https://jang.com.pk/rss/1/1", name: "قومی خبریں" },
+      {
+        url: "https://www.thenews.com.pk/rss/1/1",
+        name: "The News International - Pakistan",
+      },
+      { url: "https://newsnblogs.com/feed/", name: "News Blog" },
+      { url: "https://www.express.pk/feed/", name: "ایکسپریس اردو" },
     ],
   },
   {
@@ -1950,6 +2566,7 @@ export const COUNTRIES: CountryData[] = [
         name: "Publimetro",
       },
       { url: "https://elsiglo.cl/feed/", name: "El Siglo" },
+      { url: "https://www.lanacion.cl/feed/", name: "La Nación" },
     ],
   },
   {
@@ -1978,6 +2595,8 @@ export const COUNTRIES: CountryData[] = [
         url: "https://diariocorreo.pe/arc/outboundfeeds/rss/?outputType=xml",
         name: "Diario Correo",
       },
+      { url: "https://losandes.com.pe/feed/", name: "Los Andes" },
+      { url: "https://libero.pe/rss/home.xml", name: "Libero" },
     ],
   },
   {
@@ -2018,7 +2637,10 @@ export const COUNTRIES: CountryData[] = [
     name: "Andorra",
     lat: 42.5,
     lng: 1.5,
-    fallbackFeeds: [{ url: "http://www.bondia.ad/rss.xml", name: "Diari Més" }],
+    fallbackFeeds: [
+      { url: "http://www.fotomac.com.tr/rss/anasayfa.xml", name: "ANA" },
+      { url: "http://www.bondia.ad/rss.xml", name: "Diari Més" },
+    ],
   },
   {
     code: "AF",
@@ -2047,6 +2669,12 @@ export const COUNTRIES: CountryData[] = [
       { url: "http://news.am/eng/rss/", name: "News.am" },
       { url: "http://en.1in.am/feed", name: "1in.am" },
       { url: "http://en.aravot.am/feed/", name: "Aravot" },
+      {
+        url: "http://stickers.panarmenian.net/feeds/eng/news/",
+        name: "PanArmenian.net",
+      },
+      { url: "http://www.7or.am/am/feed", name: "7or" },
+      { url: "http://civilnet.am/feed/", name: "Civilnet.am" },
     ],
   },
   {
@@ -2056,6 +2684,7 @@ export const COUNTRIES: CountryData[] = [
     lng: 47.6,
     fallbackFeeds: [
       { url: "http://news.day.az/rss/all.rss", name: "Day.az" },
+      { url: "http://news.milli.az/rss/", name: "Milli.az" },
       { url: "http://en.trend.az/feeds/index.rss", name: "Trend" },
       { url: "http://www.azadliq.org/api/aororegtor", name: "Azadliq Radiosu" },
     ],
@@ -2067,6 +2696,10 @@ export const COUNTRIES: CountryData[] = [
     lng: 17.7,
     fallbackFeeds: [
       { url: "http://www.dnevnik.ba/rss.xml", name: "Dnevnik.ba" },
+      {
+        url: "http://www.uzivoradio.com/index.php?strana=rss&opcija=najslusanije-bih",
+        name: "Radio Sarajevo",
+      },
     ],
   },
   {
@@ -2076,7 +2709,11 @@ export const COUNTRIES: CountryData[] = [
     lng: -59.5,
     fallbackFeeds: [
       { url: "http://www.nationnews.com/feed/rss", name: "Nation News" },
-      { url: "http://www.barbadostoday.bb/feed/", name: "Barbados Today" },
+      {
+        url: "http://www.theguardian.com/world/barbados/rss",
+        name: "Voice of Barbados",
+      },
+      { url: "http://www.barbadostoday.bb/feed/", name: "barbados Today" },
     ],
   },
   {
@@ -2117,7 +2754,9 @@ export const COUNTRIES: CountryData[] = [
     fallbackFeeds: [
       { url: "https://larazon.bo/feed/", name: "La Razón" },
       { url: "https://www.opinion.com.bo/rss/", name: "Opinion" },
+      { url: "https://www.la-epoca.com.bo/feed/", name: "La Epoca" },
       { url: "https://radiofides.com/es/feed/", name: "Radio Fides" },
+      { url: "https://lapatria.bo/feed/", name: "La Patria" },
     ],
   },
   {
@@ -2127,6 +2766,10 @@ export const COUNTRIES: CountryData[] = [
     lng: -77.4,
     fallbackFeeds: [
       { url: "http://bahamaspress.com/feed/", name: "Bahamas Press" },
+      {
+        url: "http://bahamaspress.com/category/news/feed/",
+        name: "Bahamas local",
+      },
     ],
   },
   {
@@ -2144,6 +2787,14 @@ export const COUNTRIES: CountryData[] = [
     lat: 17.2,
     lng: -88.5,
     fallbackFeeds: [
+      {
+        url: "http://edition.channel5belize.com/OYE/?feed=rss2&tag=love",
+        name: "Channel 5",
+      },
+      {
+        url: "http://www.hollywoodreporter.com/taxonomy/term/59/0/feed",
+        name: "The Reporter",
+      },
       { url: "http://amandala.com.bz/news/feed/", name: "Amandala" },
     ],
   },
@@ -2169,6 +2820,10 @@ export const COUNTRIES: CountryData[] = [
         url: "http://allafrica.com/tools/headlines/rdf/cameroon/headlines.rdf",
         name: "AllAfrica Cameroon",
       },
+      {
+        url: "http://www.afrik.com/affiliation/backend-foot-pays34.html",
+        name: "Afrik.com",
+      },
     ],
   },
   {
@@ -2186,8 +2841,9 @@ export const COUNTRIES: CountryData[] = [
     lat: 35.1,
     lng: 33.4,
     fallbackFeeds: [
-      { url: "http://cyprus-mail.com/feed/", name: "Cyprus Mail" },
       { url: "http://www.sigmalive.com/rss", name: "Sigma Live" },
+      { url: "http://www.typos.com.cy/rss", name: "Typos" },
+      { url: "http://cyprus-mail.com/feed/", name: "Cyprus Mail (English)" },
     ],
   },
   {
@@ -2202,7 +2858,7 @@ export const COUNTRIES: CountryData[] = [
     name: "Denmark",
     lat: 56.3,
     lng: 9.5,
-    fallbackFeeds: [{ url: "http://borsen.dk/rss/", name: "Børsen" }],
+    fallbackFeeds: [{ url: "http://borsen.dk/rss/", name: "Borsen." }],
   },
   {
     code: "DM",
@@ -2224,6 +2880,7 @@ export const COUNTRIES: CountryData[] = [
     fallbackFeeds: [
       { url: "http://almomento.net/feed/", name: "Almomento.net" },
       { url: "http://acento.com/feed/", name: "Acento" },
+      { url: "http://www.gentetuya.com/feed/", name: "GenteTuya.com" },
     ],
   },
   {
@@ -2232,9 +2889,14 @@ export const COUNTRIES: CountryData[] = [
     lat: 28.0,
     lng: 1.7,
     fallbackFeeds: [
-      { url: "http://www.algerie360.com/feed/", name: "Algerie360" },
+      {
+        url: "http://www.djelfa.info/vb/external.php?type=RSS2",
+        name: "Djelfa.info",
+      },
+      { url: "http://www.algerie360.com/feed/", name: "Algerie360.com" },
       { url: "http://elkhadra.com/fr/feed/", name: "El Khadra" },
       { url: "http://www.tsa-algerie.com/feed/", name: "TSA" },
+      { url: "http://www.dzfoot.com/feed", name: "dzFoot.com" },
     ],
   },
   {
@@ -2244,7 +2906,33 @@ export const COUNTRIES: CountryData[] = [
     lng: -78.2,
     fallbackFeeds: [
       { url: "https://www.elcomercio.com/feed/", name: "El Comercio" },
+      {
+        url: "https://www.eluniverso.com/arc/outboundfeeds/rss-subsection/noticias/ecuador?outputType=xml",
+        name: "El Universo",
+      },
       { url: "https://gk.city/feed/", name: "GK City" },
+      { url: "https://www.expreso.ec/rss/", name: "Expreso" },
+      { url: "https://elmercurio.com.ec/feed/", name: "El Mercurio" },
+      { url: "https://www.laprensa.com.ec/feed/", name: "La Prensa" },
+      { url: "https://www.diariolosandes.com.ec/feed/", name: "Los Andes" },
+      { url: "https://www.larepublica.ec/feed/", name: "La Republica" },
+      { url: "https://www.elheraldo.com.ec/feed/", name: "El Heraldo" },
+      { url: "https://elnorte.ec/feed/", name: "El Norte" },
+      { url: "https://lagaceta.com.ec/feed/", name: "La Gaceta" },
+      { url: "https://cronica.com.ec/feed/", name: "Crónica" },
+      { url: "https://manabinoticias.com/feed/", name: "Manabí Noticias" },
+      { url: "https://ecoamazonico.com/feed/", name: "ECOAmazónico" },
+      { url: "https://www.notiamazonia.com/feed/", name: "Noti Amazonía" },
+      { url: "https://www.elamazonico.com/portal/feed/", name: "El Amazónico" },
+      { url: "https://quenoticias.com/feed/", name: "Qué!" },
+      { url: "https://lanacion.com.ec/feed/", name: "La Nación" },
+      { url: "https://www.ecuavisa.com/rss/noticias", name: "ecuavisa" },
+      { url: "https://ecuadorenvivo.com/feed/", name: "Ecuador en vivo" },
+      {
+        url: "https://www.futbolecuador.com/stories/rss",
+        name: "futbolecuador.com",
+      },
+      { url: "https://studiofutbol.com.ec/feed/", name: "StudioFútbol" },
     ],
   },
   {
@@ -2252,7 +2940,16 @@ export const COUNTRIES: CountryData[] = [
     name: "Estonia",
     lat: 58.6,
     lng: 25.0,
-    fallbackFeeds: [{ url: "http://www.postimees.ee/rss/", name: "Postimees" }],
+    fallbackFeeds: [
+      { url: "http://www.postimees.ee/rss/", name: "Postimees" },
+      {
+        url: "http://elu24.postimees.ee/rss/",
+        name: "Elu24 meelelahutusuudised",
+      },
+      { url: "http://tartu.postimees.ee/rss/", name: "Tartu Postimees" },
+      { url: "http://www.parnupostimees.ee/rss/", name: "Parnu Postimees" },
+      { url: "http://www.virumaateataja.ee/rss/", name: "Virumaa Teataja" },
+    ],
   },
   {
     code: "ER",
@@ -2264,6 +2961,10 @@ export const COUNTRIES: CountryData[] = [
         url: "http://asmarino.com/?format=feed&type=rss",
         name: "Asmarino Independent",
       },
+      {
+        url: "http://feeds.bbci.co.uk/news/world/africa/rss.xml",
+        name: "Eritrea Profile",
+      },
     ],
   },
   {
@@ -2272,8 +2973,15 @@ export const COUNTRIES: CountryData[] = [
     lat: 61.9,
     lng: 25.7,
     fallbackFeeds: [
-      { url: "http://yle.fi/uutiset/rss/uutiset.rss?osasto=news", name: "YLE" },
-      { url: "http://www.iltalehti.fi/rss/uutiset.xml", name: "Iltalehti" },
+      { url: "http://www.iltalehti.fi/rss/uutiset.xml", name: "Iltalehti.fi" },
+      { url: "http://yle.fi/uutiset/rss/uutiset.rss?osasto=news", name: "yle" },
+      { url: "http://www.kaleva.fi/rss/show/?channels=1", name: "Kaleva.fi" },
+      { url: "http://www.ts.fi/rss.xml", name: "Turun Sanomat" },
+      {
+        url: "http://www.stara.fi/kilpailut/ystavanpaiva/feed/",
+        name: "Stara",
+      },
+      { url: "http://www.talouselama.fi/rss.xml", name: "Talouselama" },
     ],
   },
   {
@@ -2306,7 +3014,17 @@ export const COUNTRIES: CountryData[] = [
     name: "Guinea",
     lat: 9.9,
     lng: -11.8,
-    fallbackFeeds: [{ url: "http://guineenews.org/feed/", name: "Guineenews" }],
+    fallbackFeeds: [
+      { url: "http://guineenews.org/feed/", name: "Guineenews" },
+      {
+        url: "http://guineematin.com/category/ma-region/haute-guinee/kankan/feed/",
+        name: "Radio Kankan",
+      },
+      {
+        url: "http://rss.wn.com/French/related-articles/2014/12/08/les_personnes_seules_sont_les_plus_touchees/",
+        name: "Radio Nostalgie Guin",
+      },
+    ],
   },
   {
     code: "GT",
@@ -2332,8 +3050,12 @@ export const COUNTRIES: CountryData[] = [
     lat: 45.1,
     lng: 15.2,
     fallbackFeeds: [
-      { url: "http://www.24sata.hr/feeds/news.xml", name: "24sata" },
-      { url: "http://www.tportal.hr/rss/naslovnicarss.xml", name: "tportal" },
+      { url: "http://www.24sata.hr/feeds/news.xml", name: "24sata.hr" },
+      {
+        url: "http://www.tportal.hr/rss/naslovnicarss.xml",
+        name: "tportal.hr",
+      },
+      { url: "http://rss.dnevnik.hr/index.rss", name: "Dnevnik.hr" },
     ],
   },
   {
@@ -2354,7 +3076,7 @@ export const COUNTRIES: CountryData[] = [
     lat: 33.2,
     lng: 43.7,
     fallbackFeeds: [
-      { url: "http://www.ahewar.org/rss/default.asp?lt=7", name: "Ahewar" },
+      { url: "http://www.ahewar.org/rss/default.asp?lt=7", name: "Ahewar.org" },
     ],
   },
   {
@@ -2363,9 +3085,38 @@ export const COUNTRIES: CountryData[] = [
     lat: 32.4,
     lng: 53.7,
     fallbackFeeds: [
+      { url: "http://www.tabnak.ir/fa/rss/allnews", name: "Tabnak" },
       { url: "http://english.khabaronline.ir/rss/", name: "Khabar Online" },
-      { url: "http://www.radiofarda.com/api/", name: "Radio Farda" },
+      { url: "http://www.radiofarda.com/api/", name: "Radiofarda.com" },
       { url: "http://www.mehrnews.com/rss", name: "Mehr News" },
+      {
+        url: "http://rss.wn.com/English/related-articles/2014/12/08/Major_Iranian_world_wire_industries_to_assemble_in_Tehran/",
+        name: "DW - Iran",
+      },
+      {
+        url: "http://ir.voanews.com/api/zkup_empmy",
+        name: "Voice of America - Iran",
+      },
+      { url: "http://www.hamshahrionline.ir/rss", name: "Hamshahri" },
+      { url: "http://www.asriran.com/fa/rss/allnews", name: "Asriran.com" },
+      {
+        url: "https://www.yjc.ir/fa/rss/allnews",
+        name: "خبرگزاری باشگاه خبرنگاران | آخرین اخبار ایران و جهان | YJC",
+      },
+      { url: "https://www.tabnak.ir/fa/rss/allnews", name: "تابناک | TABNAK" },
+      {
+        url: "https://www.mehrnews.com/rss",
+        name: "خبرگزاری مهر | اخبار ایران و جهان | Mehr News Agency",
+      },
+      {
+        url: "https://www.khabaronline.ir/rss",
+        name: "خبرگزاری خبرآنلاین - آخرین اخبار ایران و جهان | Khabaronline",
+      },
+      {
+        url: "https://www.tasnimnews.com/fa/rss/feed/0/8/0/%D9%85%D9%87%D9%85%D8%AA%D8%B1%DB%8C%D9%86-%D8%A7%D8%AE%D8%A8%D8%A7%D8%B1-%D8%AA%D8%B3%D9%86%DB%8C%D9%85",
+        name: "اخبار ایران و جهان",
+      },
+      { url: "https://www.asriran.com/fa/rss/allnews", name: "عصر ايران" },
     ],
   },
   {
@@ -2375,7 +3126,13 @@ export const COUNTRIES: CountryData[] = [
     lng: -21.9,
     fallbackFeeds: [
       { url: "http://www.mbl.is/mbl-frettir-forsida", name: "mbl.is" },
+      {
+        url: "http://www.visir.is/apps/pbcs.dll/section?Category=FRETTIR&Template=rss&mime=xml",
+        name: "Visir",
+      },
+      { url: "http://www.dv.is/straumur/", name: "DV" },
       { url: "http://www.ruv.is/rss/frettir", name: "RUV" },
+      { url: "http://www.feykir.is/feed", name: "Feykir" },
     ],
   },
   {
@@ -2388,7 +3145,10 @@ export const COUNTRIES: CountryData[] = [
         url: "http://jamaica-gleaner.com/feed/rss.xml",
         name: "Jamaica Gleaner",
       },
-      { url: "http://jamaica-star.com/feed/news.xml", name: "Jamaica Star" },
+      {
+        url: "http://jamaica-star.com/feed/news.xml",
+        name: "The Jamaica Star",
+      },
     ],
   },
   {
@@ -2408,6 +3168,12 @@ export const COUNTRIES: CountryData[] = [
     fallbackFeeds: [
       { url: "http://www.akipress.com/rss/en.rss", name: "AKIpress" },
       { url: "http://www.tazabek.kg/rss/news.rss", name: "Tazabek" },
+      { url: "http://uz.ca-news.org/rss/main.rss", name: "CA-News.org" },
+      { url: "http://www.knews.kg/pro_dengi/rss/", name: "K-News" },
+      {
+        url: "http://www.vesti.kg/index.php?option=com_k2&view=itemlist&format=feed",
+        name: "Vesti.kg",
+      },
     ],
   },
   {
@@ -2417,6 +3183,10 @@ export const COUNTRIES: CountryData[] = [
     lng: 105.0,
     fallbackFeeds: [
       { url: "http://www.khmer.rfi.fr/cambodia/rss", name: "RFI Khmer" },
+      {
+        url: "http://rss.wn.com/English/related-articles/2014/12/16/CAMBODIA_PRESSGeneral_Electric_to_sign_power_deal_with_Cambo/",
+        name: "Phnom Penh Post (English)",
+      },
     ],
   },
   {
@@ -2463,6 +3233,10 @@ export const COUNTRIES: CountryData[] = [
     lat: 26.3,
     lng: 17.2,
     fallbackFeeds: [
+      {
+        url: "http://www.dubaisavers.com/tag/al-manara/feed/",
+        name: "Al Manara",
+      },
       { url: "http://www.tripolipost.com/rss.xml", name: "Tripoli Post" },
     ],
   },
@@ -2485,8 +3259,10 @@ export const COUNTRIES: CountryData[] = [
     lng: 28.4,
     fallbackFeeds: [
       { url: "http://point.md/ru/rss/novosti/", name: "Point" },
-      { url: "http://www.timpul.md/rss", name: "Timpul" },
-      { url: "https://www.zdg.md/feed/atom/", name: "Ziarul de Gardă" },
+      { url: "http://www.timpul.md/rss", name: "Timpul.md" },
+      { url: "http://www.noi.md/ru/feed", name: "NOI.md" },
+      { url: "https://moldova1.md/rss", name: "Moldova1" },
+      { url: "https://www.zdg.md/feed/atom/", name: "Ziarul de Gardă (ZdG)" },
     ],
   },
   {
@@ -2496,7 +3272,34 @@ export const COUNTRIES: CountryData[] = [
     lng: 19.4,
     fallbackFeeds: [
       { url: "https://www.vijesti.me/rss", name: "Vijesti" },
-      { url: "https://www.cdm.me/feed/", name: "CDM" },
+      { url: "https://rss.pobjeda.me/", name: "Pobjeda" },
+      { url: "https://www.cdm.me/feed/", name: "CDM Cafe Del Montenegro" },
+      { url: "https://rss.portalanalitika.me/", name: "Analitika" },
+      { url: "https://rss.aktuelno.me/", name: "Actualno.me" },
+      { url: "https://rtcg.me/vijesti/rss.html", name: "RTCG" },
+      { url: "https://rtnk.me/feed/", name: "RTVNK" },
+      { url: "http://www.radiodux.me/rss.xml", name: "RadioDux" },
+      { url: "https://radiotitograd.me/feed/", name: "RadioTitograd" },
+      {
+        url: "https://espona.me/index.php?format=feed&type=atom",
+        name: "Espona",
+      },
+      { url: "https://svetigora.com/feed/", name: "Svetigora" },
+      { url: "https://bokanews.me/feed/", name: "BokaNews" },
+      { url: "https://volimpodgoricu.me/feed", name: "VolimPodgoricu" },
+      { url: "https://kodex.me/feed/", name: "Kodex.me" },
+      { url: "https://onogost.me/feed/", name: "Onogošt" },
+      { url: "https://www.novineniksica.me/feed/", name: "NovineNiikšića" },
+      {
+        url: "https://s-medijicg.com/?format=feed&type=atom",
+        name: "SrpskeNovine",
+      },
+      { url: "https://www.pvinformer.me/feed/", name: "PVInformer" },
+      { url: "https://pvportal.me/feed/", name: "PVPortal" },
+      { url: "https://www.roditelji.me/feed/", name: "Roditelji.me" },
+      { url: "https://radioberane.me/feed/", name: "RadioBerane" },
+      { url: "https://mne.ul-info.com/feed/", name: "ULInfo" },
+      { url: "https://barinfo.me/feed/", name: "RadioBar" },
     ],
   },
   {
@@ -2509,6 +3312,10 @@ export const COUNTRIES: CountryData[] = [
         url: "http://www.madagascar-tribune.com/spip.php?page=backend",
         name: "Madagascar Tribune",
       },
+      {
+        url: "http://www.newsmada.com/rubriques/actualites/feed/",
+        name: "Newsmada",
+      },
     ],
   },
   {
@@ -2516,7 +3323,22 @@ export const COUNTRIES: CountryData[] = [
     name: "North Macedonia",
     lat: 41.5,
     lng: 21.7,
-    fallbackFeeds: [{ url: "http://www.mkd.mk/feed", name: "MKD" }],
+    fallbackFeeds: [
+      { url: "http://kajgana.com/rss.xml", name: "Kajgana" },
+      {
+        url: "http://forum.crnobelo.com/forums/%D0%A0%D0%B5%D0%BB%D0%B8%D0%B3%D0%B8%D1%98%D0%B0.68/index.rss",
+        name: "crnobelo.com",
+      },
+      { url: "http://www.mkd.mk/feed", name: "MKD" },
+      {
+        url: "http://news.makedonias.gr/89309/erevna-daily-mail-to-chirotero-protathlima-ston-kosmo-ine-i-superleague/feed/",
+        name: "Daily Makedonia",
+      },
+      {
+        url: "https://www.mrt.com.mk/rss.xml",
+        name: "Makedonska Radio Televizija (MRT)",
+      },
+    ],
   },
   {
     code: "ML",
@@ -2524,7 +3346,7 @@ export const COUNTRIES: CountryData[] = [
     lat: 17.6,
     lng: -4.0,
     fallbackFeeds: [
-      { url: "http://www.journaldumali.com/rss/", name: "Journal du Mali" },
+      { url: "http://www.journaldumali.com/rss/", name: "JournalDuMali.com" },
     ],
   },
   {
@@ -2534,7 +3356,10 @@ export const COUNTRIES: CountryData[] = [
     lng: 95.9,
     fallbackFeeds: [
       { url: "http://www.irrawaddy.org/feed", name: "The Irrawaddy" },
-      { url: "http://myanmargazette.net/feed", name: "Myanmar Gazette" },
+      {
+        url: "http://myanmargazette.net/feed",
+        name: "Myanmar Gazette News Media Forum Network",
+      },
     ],
   },
   {
@@ -2542,7 +3367,13 @@ export const COUNTRIES: CountryData[] = [
     name: "Mongolia",
     lat: 46.9,
     lng: 103.8,
-    fallbackFeeds: [{ url: "http://www.bolod.mn/feed.php", name: "Bolod.mn" }],
+    fallbackFeeds: [
+      {
+        url: "http://dmowiki.com/index.php?title=Mikemon&feed=atom&action=history",
+        name: "Wikimon",
+      },
+      { url: "http://www.bolod.mn/feed.php", name: "Bolod.mn" },
+    ],
   },
   {
     code: "MT",
@@ -2560,7 +3391,7 @@ export const COUNTRIES: CountryData[] = [
     lat: -20.3,
     lng: 57.6,
     fallbackFeeds: [
-      { url: "http://www.lexpress.mu/rss.xml", name: "L'Express" },
+      { url: "http://www.lexpress.mu/rss.xml", name: "Lexpress.mu" },
     ],
   },
   {
@@ -2577,6 +3408,10 @@ export const COUNTRIES: CountryData[] = [
     lng: 34.3,
     fallbackFeeds: [
       { url: "http://www.nyasatimes.com/feed/", name: "Nyasa Times" },
+      {
+        url: "http://www.nyasatimes.com/category/national/feed/",
+        name: "Malawi Nation",
+      },
       { url: "http://www.malawivoice.com/feed/", name: "Malawi Voice" },
     ],
   },
@@ -2587,6 +3422,11 @@ export const COUNTRIES: CountryData[] = [
     lng: 8.1,
     fallbackFeeds: [
       { url: "http://www.tamtaminfo.com/feed/", name: "Tam Tam Info" },
+      {
+        url: "http://nigerdiaspora.net/?type=rss&format=feed",
+        name: "Niger Diaspora",
+      },
+      { url: "http://www.republicain-lorrain.fr/rss", name: "La Republicain" },
     ],
   },
   {
@@ -2604,10 +3444,22 @@ export const COUNTRIES: CountryData[] = [
     lat: 28.4,
     lng: 84.1,
     fallbackFeeds: [
-      { url: "http://www.onlinekhabar.com/feed/", name: "Online Khabar" },
+      { url: "http://www.onlinekhabar.com/feed/", name: "onlinekhabar.com" },
+      { url: "http://www.newsofnepal.com/new/feed", name: "NewsofNepal.com" },
     ],
   },
-  { code: "PA", name: "Panama", lat: 8.5, lng: -80.8, fallbackFeeds: [] },
+  {
+    code: "PA",
+    name: "Panama",
+    lat: 8.5,
+    lng: -80.8,
+    fallbackFeeds: [
+      {
+        url: "http://www.odditysoftware.com/database_feed_Central+America+Geocode+Data.htm",
+        name: "Central America Data",
+      },
+    ],
+  },
   {
     code: "PR",
     name: "Puerto Rico",
@@ -2621,7 +3473,11 @@ export const COUNTRIES: CountryData[] = [
     lat: 31.9,
     lng: 35.2,
     fallbackFeeds: [
-      { url: "http://www.nablustv.net/xml.asp", name: "Nablus TV" },
+      {
+        url: "http://rss.wn.com/English/related-articles/2014/11/29/Timeline_of_violations_against_freedom_of_information_in_Ira/",
+        name: "IRA Arab News Agency",
+      },
+      { url: "http://www.nablustv.net/xml.asp", name: "nablus TV" },
     ],
   },
   {
@@ -2636,7 +3492,18 @@ export const COUNTRIES: CountryData[] = [
       },
     ],
   },
-  { code: "SL", name: "Sierra Leone", lat: 8.5, lng: -11.8, fallbackFeeds: [] },
+  {
+    code: "SL",
+    name: "Sierra Leone",
+    lat: 8.5,
+    lng: -11.8,
+    fallbackFeeds: [
+      {
+        url: "http://rss.wn.com/English/related-articles/2014/12/08/Awareness_Times_News_Briefs_from_Sierra_Leone_8th_December_2/",
+        name: "Awareness Times",
+      },
+    ],
+  },
   {
     code: "SM",
     name: "San Marino",
@@ -2652,8 +3519,16 @@ export const COUNTRIES: CountryData[] = [
     lat: 5.2,
     lng: 46.2,
     fallbackFeeds: [
-      { url: "http://www.jowhar.com/?feed=rss2&author=1", name: "Jowhar" },
+      { url: "http://www.jowhar.com/?feed=rss2&author=1", name: "Jowhar.com" },
+      {
+        url: "http://feeds.feedburner.com/waagacusubmedia",
+        name: "Waagacusub Media",
+      },
       { url: "http://www.voasomali.com/api/", name: "VOA Somali" },
+      {
+        url: "http://puntlandpost.net/request-for-proposals-for-supply-and-installation-of-solar-lighting-in-garowe-puntland-somalia/feed/",
+        name: "Puntland Post",
+      },
     ],
   },
   {
@@ -2666,7 +3541,8 @@ export const COUNTRIES: CountryData[] = [
         url: "http://www.starnieuws.com/rss/starnieuws.rss",
         name: "Starnieuws",
       },
-      { url: "http://www.waterkant.net/feed/", name: "Waterkant" },
+      { url: "http://www.gfcnieuws.com/?feed=rss2", name: "GFC Nieuws" },
+      { url: "http://www.waterkant.net/feed/", name: "Waterkant.net" },
     ],
   },
   {
@@ -2693,7 +3569,9 @@ export const COUNTRIES: CountryData[] = [
     name: "Tunisia",
     lat: 33.9,
     lng: 9.5,
-    fallbackFeeds: [{ url: "http://www.leaders.com.tn/rss", name: "Leaders" }],
+    fallbackFeeds: [
+      { url: "http://www.leaders.com.tn/rss", name: "leaders.com.tn" },
+    ],
   },
   {
     code: "UY",
@@ -2706,6 +3584,12 @@ export const COUNTRIES: CountryData[] = [
         name: "El Observador",
       },
       { url: "https://ladiaria.com.uy/feeds/articulos", name: "La Diaria" },
+      { url: "https://elpopular.uy/feed/", name: "El Popular" },
+      { url: "https://www.xn--lamaana-7za.uy/feed/", name: "La Mañana" },
+      {
+        url: "https://www.subrayado.com.uy/rss/pages/home.xml",
+        name: "Subrayado HD",
+      },
     ],
   },
   {
@@ -2721,7 +3605,10 @@ export const COUNTRIES: CountryData[] = [
     lat: -13.8,
     lng: -172.1,
     fallbackFeeds: [
-      { url: "http://www.samoanews.com/?q=rss.xml", name: "Samoa News" },
+      {
+        url: "http://www.samoanews.com/?q=rss.xml&quicktabs_3=0",
+        name: "Samoa News",
+      },
     ],
   },
   {
@@ -2741,6 +3628,8 @@ export const COUNTRIES: CountryData[] = [
     lng: 48.5,
     fallbackFeeds: [
       { url: "https://marebpress.net/news_rss.php", name: "Mareb Press" },
+      { url: "http://al-tagheer.com/rss.php", name: "Al-Tagheer.com" },
+      { url: "http://hshd.net/rss.php", name: "hshd.net" },
     ],
   },
   {
@@ -2748,7 +3637,10 @@ export const COUNTRIES: CountryData[] = [
     name: "Zambia",
     lat: -13.1,
     lng: 27.8,
-    fallbackFeeds: [{ url: "http://tumfweko.com/feed/", name: "Tumfweko" }],
+    fallbackFeeds: [
+      { url: "http://tumfweko.com/feed/", name: "Tumfweko" },
+      { url: "http://nypost.com/feed/", name: "Post" },
+    ],
   },
 ];
 
