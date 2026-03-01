@@ -8,6 +8,7 @@ import Toolbar from "@/components/Toolbar";
 import SearchBar from "@/components/SearchBar";
 import Sidebar from "@/components/Sidebar";
 import Watermark from "@/components/Watermark";
+import InfoButton from "@/components/InfoButton";
 
 const GlobeScene = dynamic(() => import("@/components/GlobeScene"), {
   ssr: false,
@@ -30,6 +31,7 @@ export default function Home() {
       <SearchBar />
       <Sidebar />
       <Toolbar />
+      <InfoButton />
     </main>
   );
 }

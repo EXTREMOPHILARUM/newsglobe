@@ -89,26 +89,61 @@ export const useNewsStore = create<NewsState>((set, get) => ({
       const params = new URLSearchParams();
       if (activeCategory !== "all") params.set("topic", activeCategory);
       if (searchQuery) params.set("q", searchQuery);
-      const res = await fetch(`/api/news?${params.toString()}`);
-      if (!res.ok) throw new Error("Failed to fetch news");
-      const data: NewsArticle[] = await res.json();
-      const filtered = filterArticles(data, activeCategory, searchQuery);
 
-      // If searching, fly to the centroid of results
-      let pendingFlyTo: FlyToTarget | null = null;
-      if (searchQuery && filtered.length > 0) {
-        const avgLat = filtered.reduce((s, a) => s + a.lat, 0) / filtered.length;
-        const avgLng = filtered.reduce((s, a) => s + a.lng, 0) / filtered.length;
-        pendingFlyTo = { lat: avgLat, lng: avgLng, zoom: 3 };
+      // For search/topic queries, fetch all at once (no batching)
+      if (searchQuery || (activeCategory !== "all" && activeCategory !== "world")) {
+        const res = await fetch(`/api/news?${params.toString()}`);
+        if (!res.ok) throw new Error("Failed to fetch news");
+        const data: NewsArticle[] = await res.json();
+        const filtered = filterArticles(data, activeCategory, searchQuery);
+
+        let pendingFlyTo: FlyToTarget | null = null;
+        if (searchQuery && filtered.length > 0) {
+          const avgLat = filtered.reduce((s, a) => s + a.lat, 0) / filtered.length;
+          const avgLng = filtered.reduce((s, a) => s + a.lng, 0) / filtered.length;
+          pendingFlyTo = { lat: avgLat, lng: avgLng, zoom: 3 };
+        }
+
+        set({
+          articles: data,
+          filteredArticles: filtered,
+          loading: false,
+          pendingFlyTo,
+          flyToVersion: pendingFlyTo ? get().flyToVersion + 1 : get().flyToVersion,
+        });
+        return;
       }
 
-      set({
-        articles: data,
-        filteredArticles: filtered,
-        loading: false,
-        pendingFlyTo,
-        flyToVersion: pendingFlyTo ? get().flyToVersion + 1 : get().flyToVersion,
-      });
+      // Global view: fetch incrementally in batches
+      const totalBatches = 4; // ceil(69 regions / 20 per batch)
+
+      for (let b = 0; b < totalBatches; b++) {
+        // Abort if user started a search or selected a country mid-fetch
+        const currentState = get();
+        if (currentState.searchQuery || currentState.selectedCountry) break;
+
+        const batchParams = new URLSearchParams(params);
+        batchParams.set("batch", String(b));
+        const res = await fetch(`/api/news?${batchParams.toString()}`);
+        if (!res.ok) continue;
+        const batchData: NewsArticle[] = await res.json();
+
+        const { articles: existing, activeCategory: cat, searchQuery: q } = get();
+        // First batch replaces, subsequent batches merge
+        const base = b === 0 ? [] : existing;
+        const baseUrls = new Set(base.map((a) => a.url));
+        const newArticles = batchData.filter((a) => !baseUrls.has(a.url));
+        const merged = [...base, ...newArticles];
+        const filtered = filterArticles(merged, cat, q);
+
+        set({
+          articles: merged,
+          filteredArticles: filtered,
+          loading: false,
+        });
+      }
+
+      set({ loading: false });
     } catch (e) {
       set({ error: (e as Error).message, loading: false });
     }
