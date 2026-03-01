@@ -36,7 +36,7 @@ export default function ShareButton() {
   };
 
   return (
-    <div className="fixed bottom-20 left-16 md:bottom-4 md:right-16 md:left-auto z-50" ref={menuRef}>
+    <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen(!open)}
         className="w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white/60 hover:text-white hover:border-white/30 transition-colors flex items-center justify-center"

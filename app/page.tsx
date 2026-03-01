@@ -9,7 +9,6 @@ import SearchBar from "@/components/SearchBar";
 import Sidebar from "@/components/Sidebar";
 import Watermark from "@/components/Watermark";
 import InfoButton from "@/components/InfoButton";
-import ShareButton from "@/components/ShareButton";
 
 const GlobeScene = dynamic(() => import("@/components/GlobeScene"), {
   ssr: false,
@@ -33,7 +32,6 @@ export default function Home() {
       <Sidebar />
       <Toolbar />
       <InfoButton />
-      <ShareButton />
     </main>
   );
 }

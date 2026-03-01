@@ -22,6 +22,7 @@ function ArticleList() {
     filteredArticles,
     loading,
     setHoveredArticle,
+    flyToArticle,
     selectedCountry,
     countryArticles,
     countryLoading,
@@ -29,9 +30,7 @@ function ArticleList() {
   } = useNewsStore();
 
   const isCountryView = !!selectedCountry;
-  const items = isCountryView
-    ? countryArticles.slice(0, 20)
-    : filteredArticles.slice(0, 15);
+  const items = isCountryView ? countryArticles : filteredArticles;
   const isLoading = isCountryView ? countryLoading : loading;
 
   return (
@@ -78,12 +77,10 @@ function ArticleList() {
         {items.map((article) => {
           const color = CATEGORY_COLORS[article.category];
           return (
-            <a
+            <div
               key={article.id}
-              href={article.url}
-              target="_blank"
-              rel="noopener noreferrer"
               className="block px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
+              onClick={() => flyToArticle(article)}
               onMouseEnter={() => setHoveredArticle(article)}
               onMouseLeave={() => setHoveredArticle(null)}
             >
@@ -104,6 +101,16 @@ function ArticleList() {
                     <span className="text-gray-500 text-[10px]">
                       {timeAgo(article.publishedAt)}
                     </span>
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-gray-600 hover:text-white text-[10px] transition-colors ml-auto"
+                      title="Open article"
+                    >
+                      ↗
+                    </a>
                   </div>
                 </div>
                 {article.thumbnail && (
@@ -115,7 +122,7 @@ function ArticleList() {
                   />
                 )}
               </div>
-            </a>
+            </div>
           );
         })}
       </div>
