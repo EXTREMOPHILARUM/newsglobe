@@ -212,12 +212,25 @@ async function cachedResponse(cacheKey: string, fetchData: () => Promise<NewsArt
   return response;
 }
 
+/** Reorder REGION_FEEDS so the user's country appears first (in batch 0) */
+function reorderRegions(loc: string | null): RegionFeed[] {
+  if (!loc) return REGION_FEEDS;
+  const upperLoc = loc.toUpperCase();
+  const idx = REGION_FEEDS.findIndex((r) => r.gl === upperLoc);
+  if (idx <= 0) return REGION_FEEDS; // already first or not found
+  const reordered = [...REGION_FEEDS];
+  const [moved] = reordered.splice(idx, 1);
+  reordered.unshift(moved);
+  return reordered;
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const topic = (searchParams.get("topic") || "general") as Category;
   const query = searchParams.get("q") || "";
   const country = searchParams.get("country") || "";
   const batch = searchParams.get("batch");  // 0-indexed batch number for incremental loading
+  const loc = searchParams.get("loc") || "";
 
   // Country-specific feed: return trending stories for that country
   if (country) {
@@ -244,10 +257,11 @@ export async function GET(request: NextRequest) {
   }
 
   const batchSuffix = batch !== null ? `:b${batch}` : "";
-  return cachedResponse(`${topic}:${query}${batchSuffix}`, async () => {
+  const locSuffix = loc ? `:loc${loc}` : "";
+  return cachedResponse(`${topic}:${query}${batchSuffix}${locSuffix}`, async () => {
     if (query) {
       // Search mode: search across a few major regions in parallel
-      const searchRegions = REGION_FEEDS.slice(0, 8);
+      const searchRegions = reorderRegions(loc).slice(0, 8);
       const results = await Promise.all(
         searchRegions.map(async (region) => {
           const feedUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=${region.hl}&gl=${region.gl}&ceid=${region.ceid}`;
@@ -322,14 +336,15 @@ export async function GET(request: NextRequest) {
       const totalBatches = getTotalBatches();
       const batchIndex = batch !== null ? parseInt(batch, 10) : null;
 
-      // Determine which regions to fetch
+      // Determine which regions to fetch (reordered by user location)
+      const orderedFeeds = reorderRegions(loc);
       let regions: RegionFeed[];
       if (batchIndex !== null && batchIndex >= 0 && batchIndex < totalBatches) {
         const start = batchIndex * REGIONS_PER_BATCH;
-        regions = REGION_FEEDS.slice(start, start + REGIONS_PER_BATCH);
+        regions = orderedFeeds.slice(start, start + REGIONS_PER_BATCH);
       } else {
         // No batch param: fetch all (backwards compatible, used by search/topic)
-        regions = REGION_FEEDS;
+        regions = orderedFeeds;
       }
 
       const perRegion = Math.ceil(100 / REGION_FEEDS.length);

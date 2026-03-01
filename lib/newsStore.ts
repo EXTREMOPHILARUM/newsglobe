@@ -27,6 +27,7 @@ interface NewsState {
   countryLoading: boolean;
   pendingFlyTo: FlyToTarget | null;
   flyToVersion: number;
+  userCountry: string | null;
   setActiveCategory: (cat: Category | "all") => void;
   setSearchQuery: (q: string) => void;
   setHoveredArticle: (a: NewsArticle | null) => void;
@@ -84,6 +85,7 @@ export const useNewsStore = create<NewsState>((set, get) => ({
   countryLoading: false,
   pendingFlyTo: null,
   flyToVersion: 0,
+  userCountry: null,
 
   setActiveCategory: (cat) => {
     set({ activeCategory: cat });
@@ -103,9 +105,27 @@ export const useNewsStore = create<NewsState>((set, get) => ({
     const { activeCategory, searchQuery } = get();
     set({ loading: true, error: null });
     try {
+      // Fetch user's geo location once
+      let { userCountry } = get();
+      if (userCountry === null) {
+        try {
+          const geoRes = await fetch("/api/geo");
+          if (geoRes.ok) {
+            const geo = await geoRes.json();
+            userCountry = geo.country || "US";
+          } else {
+            userCountry = "US";
+          }
+        } catch {
+          userCountry = "US";
+        }
+        set({ userCountry });
+      }
+
       const params = new URLSearchParams();
       if (activeCategory !== "all") params.set("topic", activeCategory);
       if (searchQuery) params.set("q", searchQuery);
+      if (userCountry) params.set("loc", userCountry);
 
       // For search/topic queries, fetch all at once (no batching)
       if (searchQuery || (activeCategory !== "all" && activeCategory !== "world")) {
