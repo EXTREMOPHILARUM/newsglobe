@@ -118,7 +118,7 @@ const ALL_GLOBAL_FEEDS: GlobalFeedItem[] = [
   ...FALLBACK_FEED_ENTRIES.map((f): GlobalFeedItem => ({ type: "fallback", data: f })),
 ];
 
-const FEEDS_PER_BATCH = 10;
+const FEEDS_PER_BATCH = 15;
 const CACHE_TTL_SECONDS = 300;
 
 export function getTotalBatches(): number {
@@ -310,12 +310,11 @@ export async function GET(request: NextRequest) {
             lat: r.lat, lng: r.lng, name: r.name, category: "general",
           }));
         } else {
-          // Fallback: sample a few feeds
+          // Fallback: sample 1 feed per country in global view to stay under 50 subrequest limit
           const entries = normalizeFeedEntries(feed.data.feeds);
-          const maxFeeds = 3;
-          const sampled = entries.length <= maxFeeds
+          const sampled = entries.length <= 1
             ? entries
-            : entries.sort(() => Math.random() - 0.5).slice(0, maxFeeds);
+            : [entries[Math.floor(Math.random() * entries.length)]];
           for (const entry of sampled) {
             promises.push(fetchRawFeed(entry.url, {
               lat: feed.data.lat, lng: feed.data.lng, name: feed.data.name,
