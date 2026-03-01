@@ -1,4 +1,27 @@
 import { LOCATIONS } from "./countries";
+import { cityMapping } from "city-timezones";
+
+// --- Build combined location lookup (city-timezones + manual overrides) ---
+
+const CITY_COORDS = new Map<string, { lat: number; lng: number }>();
+
+// First load all 7000+ cities from city-timezones
+for (const city of cityMapping) {
+  const key = city.city.toLowerCase();
+  // Prefer larger cities (higher population) when duplicates exist
+  const existing = CITY_COORDS.get(key);
+  if (!existing || (city.pop && city.pop > 0)) {
+    CITY_COORDS.set(key, { lat: city.lat, lng: city.lng });
+  }
+  // Also index by "city, country" for disambiguation
+  const fullKey = `${city.city}, ${city.country}`.toLowerCase();
+  CITY_COORDS.set(fullKey, { lat: city.lat, lng: city.lng });
+}
+
+// Then overlay manual LOCATIONS (countries, regions, custom entries take priority)
+for (const [key, coords] of Object.entries(LOCATIONS)) {
+  CITY_COORDS.set(key, coords);
+}
 
 // --- Nominatim geocoding with persistent cache ---
 
@@ -91,7 +114,7 @@ function getSpecificity(key: string): number {
   return 3; // cities, states, specific places
 }
 
-const locationKeys = Object.keys(LOCATIONS);
+const locationKeys = Array.from(CITY_COORDS.keys());
 
 function extractCandidates(text: string): Match[] {
   const lower = text.toLowerCase();
@@ -171,7 +194,7 @@ export async function geocode(
 function staticFallback(
   key: string
 ): { lat: number; lng: number } | null {
-  const loc = LOCATIONS[key];
+  const loc = CITY_COORDS.get(key);
   if (!loc) return null;
   return jitter(loc, key);
 }
