@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NewsGlobe
+
+Real-time trending news from 150 countries on an interactive 3D globe.
+
+**[newsglobe.saurabhn.com](https://newsglobe.saurabhn.com)**
+
+## What is this?
+
+NewsGlobe pulls headlines from ~150 countries via Google News RSS feeds and plots them on a spinning 3D globe. Click any country to see its trending stories, search for topics, or just watch the world's news light up in real time.
+
+Inspired by [Polyglobe](https://pizz.watch/polyglobe) (which does this for Polymarket bets).
+
+## Features
+
+- Interactive 3D globe with auto-rotation and day/night overlay
+- 150 countries with Google News feeds + fallback RSS for countries without Google News
+- Polygon-based country selection (click anywhere inside a country's border)
+- Client-side geocoding using 7,000+ city database for precise article placement
+- Category filters: World, Business, Tech, Science, Sports, Entertainment, Health
+- Search across regions with automatic fly-to
+- Incremental loading — first batch renders immediately, rest loads in background
+- Mobile-optimized with slide-up sidebar and scrollable toolbar
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router), React 19, TypeScript
+- **3D/Map**: MapLibre GL (globe projection), React Map GL, TopoJSON
+- **State**: Zustand
+- **Styling**: Tailwind CSS 4, Framer Motion
+- **Data**: Google News RSS via `rss-parser`, geocoding via `city-timezones`
+- **Hosting**: Cloudflare Workers via `@opennextjs/cloudflare`
+- **Caching**: Workers Cache API (5-min TTL, per-datacenter)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Deployed to Cloudflare Workers via GitHub Actions on push to `main`.
 
-## Learn More
+```bash
+npm run preview   # local preview in workerd runtime
+npm run deploy    # deploy to production
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/
+  api/news/route.ts     — News API: global, topic, country, and search feeds
+  page.tsx              — Main page, polls API every 60s
+components/
+  GlobeScene.tsx        — MapLibre globe with news dots, polygon country selection
+  Sidebar.tsx           — Article list + mobile slide-up sheet
+  SearchBar.tsx         — Search input with fly-to
+  Toolbar.tsx           — Category filter buttons
+  NewsTicker.tsx        — Scrolling headline ticker
+  DayNightOverlay.tsx   — Day/night terminator on globe
+  InfoButton.tsx        — About modal + GitHub link
+lib/
+  countryFeeds.ts       — 150 countries: Google News params or fallback RSS URLs
+  newsStore.ts          — Zustand store: articles, country selection, search
+  types.ts              — NewsArticle, Category, colors
+  geocode.ts            — Client-side geocoding (city-timezones + static table)
+  countries.ts          — Manual location overrides (regions, demonyms)
+public/
+  countries-110m.json   — TopoJSON country polygons for click detection
+  land-110m.json        — TopoJSON landmass
+```
