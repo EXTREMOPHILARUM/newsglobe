@@ -23,7 +23,7 @@ export default function Toolbar() {
   };
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-4 py-2">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 max-w-[calc(100vw-2rem)] overflow-x-auto scrollbar-none">
       {categories.map((cat) => {
         const isActive = activeCategory === cat;
         const color = cat === "all" ? "#ffffff" : CATEGORY_COLORS[cat];
@@ -31,7 +31,7 @@ export default function Toolbar() {
           <button
             key={cat}
             onClick={() => handleClick(cat)}
-            className={`text-xs px-3 py-1.5 rounded-full transition-all font-medium ${
+            className={`text-xs px-3 py-1.5 rounded-full transition-all font-medium whitespace-nowrap shrink-0 ${
               isActive
                 ? "text-white"
                 : "text-gray-500 hover:text-gray-300"

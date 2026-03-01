@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useNewsStore } from "@/lib/newsStore";
 import { CATEGORY_COLORS } from "@/lib/types";
 
@@ -16,7 +17,7 @@ function timeAgo(date: string): string {
   return `${days}d ago`;
 }
 
-export default function Sidebar() {
+function ArticleList() {
   const {
     filteredArticles,
     loading,
@@ -34,8 +35,8 @@ export default function Sidebar() {
   const isLoading = isCountryView ? countryLoading : loading;
 
   return (
-    <div className="fixed right-4 top-12 bottom-20 w-80 z-40 flex flex-col bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden max-md:hidden">
-      <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+    <>
+      <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between shrink-0">
         {isCountryView ? (
           <>
             <div className="flex items-center gap-2">
@@ -110,6 +111,43 @@ export default function Sidebar() {
           );
         })}
       </div>
-    </div>
+    </>
+  );
+}
+
+export default function Sidebar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <div className="fixed right-4 top-12 bottom-20 w-80 z-40 flex-col bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden hidden md:flex">
+        <ArticleList />
+      </div>
+
+      {/* Mobile toggle button */}
+      <button
+        onClick={() => setMobileOpen(!mobileOpen)}
+        className="fixed bottom-20 right-4 z-50 w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white/60 hover:text-white hover:border-white/30 transition-colors flex items-center justify-center text-lg md:hidden"
+      >
+        {mobileOpen ? "×" : "☰"}
+      </button>
+
+      {/* Mobile slide-up sheet */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-40 md:hidden" onClick={() => setMobileOpen(false)}>
+          <div className="absolute inset-0 bg-black/40" />
+          <div
+            className="absolute bottom-0 left-0 right-0 h-[60vh] bg-black/90 backdrop-blur-md border-t border-white/10 rounded-t-2xl flex flex-col overflow-hidden animate-slide-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-center py-2 shrink-0">
+              <div className="w-10 h-1 rounded-full bg-white/20" />
+            </div>
+            <ArticleList />
+          </div>
+        </div>
+      )}
+    </>
   );
 }
