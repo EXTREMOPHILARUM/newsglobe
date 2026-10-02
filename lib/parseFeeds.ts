@@ -12,7 +12,9 @@ export interface RawFeedResponse {
   };
 }
 
-/** Parse RSS XML string using browser's native DOMParser */
+const ATOM_NS = "http://www.w3.org/2005/Atom";
+
+/** Parse RSS 2.0 / RSS 1.0 (RDF) / Atom XML using the browser's native DOMParser */
 function parseRssXml(xml: string): {
   title: string;
   items: {
@@ -22,31 +24,48 @@ function parseRssXml(xml: string): {
     pubDate: string;
     content: string;
     thumbnail?: string;
+    source?: string;
   }[];
 } {
   const parser = new DOMParser();
   const doc = parser.parseFromString(xml, "text/xml");
 
-  const feedTitle = doc.querySelector("channel > title")?.textContent || "";
-  const itemEls = doc.querySelectorAll("item");
+  const feedTitle =
+    doc.querySelector("channel > title, feed > title")?.textContent || "";
+  const itemEls = doc.querySelectorAll("item, entry");
 
   const items = Array.from(itemEls).map((el) => {
     const title = el.querySelector("title")?.textContent || "";
-    const link = el.querySelector("link")?.textContent || "";
-    const guid = el.querySelector("guid")?.textContent || link;
-    const pubDate = el.querySelector("pubDate")?.textContent || "";
+    // RSS puts the URL in the <link> text, Atom in <link href> (prefer rel="alternate")
+    const linkEl =
+      el.querySelector('link[rel="alternate"]') || el.querySelector("link");
+    const link = unwrapRedirect(
+      linkEl?.textContent?.trim() || linkEl?.getAttribute("href") || ""
+    );
+    // Bing News RSS carries the publisher in <News:Source>
+    const source =
+      el.getElementsByTagName("News:Source")[0]?.textContent || undefined;
+    const guid = el.querySelector("guid, id")?.textContent || link;
+    const pubDate =
+      el.querySelector("pubDate, published, updated")?.textContent ||
+      el.getElementsByTagName("dc:date")[0]?.textContent ||
+      "";
     const content =
-      el.querySelector("description")?.textContent ||
-      el.querySelector("content\\:encoded, encoded")?.textContent ||
+      el.querySelector("description, summary")?.textContent ||
+      el.getElementsByTagName("content:encoded")[0]?.textContent ||
+      el.getElementsByTagNameNS(ATOM_NS, "content")[0]?.textContent ||
       "";
 
-    // Extract thumbnail from media:content, media:thumbnail, or enclosure
+    // Extract thumbnail from Bing's News:Image, media:content, media:thumbnail, or enclosure
     let thumbnail: string | undefined;
     const mediaContent = el.getElementsByTagNameNS("http://search.yahoo.com/mrss/", "content")[0];
     const mediaThumbnail = el.getElementsByTagNameNS("http://search.yahoo.com/mrss/", "thumbnail")[0];
     const enclosure = el.querySelector("enclosure");
+    const bingImage = el.getElementsByTagName("News:Image")[0]?.textContent;
 
-    if (mediaContent?.getAttribute("url")) {
+    if (bingImage) {
+      thumbnail = bingImage.replace(/^http:/, "https:");
+    } else if (mediaContent?.getAttribute("url")) {
       thumbnail = mediaContent.getAttribute("url")!;
     } else if (mediaThumbnail?.getAttribute("url")) {
       thumbnail = mediaThumbnail.getAttribute("url")!;
@@ -57,10 +76,26 @@ function parseRssXml(xml: string): {
       }
     }
 
-    return { title, link, guid, pubDate, content, thumbnail };
+    return { title, link, guid, pubDate, content, thumbnail, source };
   });
 
   return { title: feedTitle, items };
+}
+
+/** Parse a feed date; unparseable or missing dates fall back to now */
+function toIsoDate(raw: string): string {
+  const t = raw ? Date.parse(raw.trim()) : NaN;
+  return new Date(Number.isNaN(t) ? Date.now() : t).toISOString();
+}
+
+/** Bing News links go through bing.com/news/apiclick.aspx?url=<article>; link to the article directly */
+function unwrapRedirect(link: string): string {
+  if (!link.includes("bing.com/news/apiclick")) return link;
+  try {
+    return new URL(link).searchParams.get("url") || link;
+  } catch {
+    return link;
+  }
 }
 
 function extractSource(title: string): string {
@@ -99,21 +134,21 @@ export function parseRawFeeds(
         if (!url || seenUrls.has(url)) continue;
         seenUrls.add(url);
 
-        const title = item.title;
-        const titleSource = extractSource(title);
+        // "Headline - Publisher" suffixes are only split off when the feed doesn't
+        // name its publisher; publisher feeds use " - " inside real headlines.
+        const knownSource = raw.meta.feedName || item.source;
+        const titleSource = knownSource ? "Unknown" : extractSource(item.title);
         const source =
-          raw.meta.feedName ||
+          knownSource ||
           (titleSource !== "Unknown" ? titleSource : feed.title || "Unknown");
 
         articles.push({
           id: item.guid || url || Math.random().toString(36),
-          title: cleanTitle(title),
+          title: knownSource ? item.title.trim() : cleanTitle(item.title),
           snippet: stripHtml(item.content).slice(0, 200),
           url,
           source,
-          publishedAt: item.pubDate
-            ? new Date(item.pubDate).toISOString()
-            : new Date().toISOString(),
+          publishedAt: toIsoDate(item.pubDate),
           category: defaultCategory !== "all" ? defaultCategory as Category : category,
           lat: raw.meta.lat,
           lng: raw.meta.lng,

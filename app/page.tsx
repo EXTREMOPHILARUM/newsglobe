@@ -19,7 +19,10 @@ export default function Home() {
 
   useEffect(() => {
     fetchNews();
-    const interval = setInterval(fetchNews, 60_000);
+    // The API serves feeds that are refreshed every 10 min, so polling faster only re-renders
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") fetchNews();
+    }, 5 * 60_000);
     return () => clearInterval(interval);
   }, [fetchNews]);
 

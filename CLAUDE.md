@@ -1,6 +1,6 @@
 # NewsGlobe
 
-Interactive 3D news globe that visualizes trending stories from 150 countries in real-time.
+Interactive 3D news globe that visualizes trending stories from 148 countries in real-time.
 
 ## Tech Stack
 
@@ -8,7 +8,7 @@ Interactive 3D news globe that visualizes trending stories from 150 countries in
 - **3D/Map**: MapLibre GL, React Map GL (globe projection), Three.js + React Three Fiber
 - **State**: Zustand (`lib/newsStore.ts`)
 - **Styling**: Tailwind CSS 4, Framer Motion
-- **Data**: Google News RSS + fallback RSS feeds via `rss-parser`, geocoding via Nominatim
+- **Data**: publisher RSS feeds (+ Bing News RSS for search), parsed client-side with DOMParser; geocoding via Nominatim
 
 ## Project Structure
 
@@ -16,7 +16,7 @@ Interactive 3D news globe that visualizes trending stories from 150 countries in
 newsglobe/               ← repo root = Next.js app root
 ├── app/
 │   ├── api/news/route.ts    ← news API: global feed, topic feeds, country feeds, search
-│   ├── page.tsx             ← main page, polls API every 60s
+│   ├── page.tsx             ← main page, polls API every 5 min (when tab visible)
 │   └── layout.tsx
 ├── components/
 │   ├── GlobeScene.tsx       ← MapLibre globe with news dots, country click handler, auto-rotation
@@ -27,7 +27,7 @@ newsglobe/               ← repo root = Next.js app root
 │   ├── DayNightOverlay.tsx  ← day/night terminator on globe
 │   └── Watermark.tsx
 ├── lib/
-│   ├── countryFeeds.ts      ← 150 countries: Google News params OR fallback RSS URLs
+│   ├── countryFeeds.ts      ← 148 countries: publisher RSS URLs (`fallbackFeeds`)
 │   ├── newsStore.ts         ← Zustand store: articles, country selection, flyTo, search
 │   ├── types.ts             ← NewsArticle, Category, CATEGORY_COLORS
 │   ├── countries.ts         ← geocoding location lookup table (cities, countries, regions)
@@ -40,18 +40,21 @@ newsglobe/               ← repo root = Next.js app root
 ## Key Patterns
 
 ### Country Feed System (`lib/countryFeeds.ts`)
-- Single source of truth for all 150 supported countries
-- Countries with Google News editions have `gl`, `ceid`, `hl` fields
-- Countries without Google News have `fallbackFeeds` (direct RSS URLs from news outlets)
+- Single source of truth for all 148 supported countries; every country has `fallbackFeeds` (direct publisher RSS)
+- **No Google News**: it throttles Cloudflare Workers egress (requests hang or 503), which broke the feed
+- Store post-redirect URLs: each redirect costs a Workers subrequest
+- Verify new feeds from the Cloudflare edge, not just locally — some publishers block CF IPs
 - Upstream source for fallback feeds: `github.com/yavuz/news-feed-list-of-countries`
 - Use `/update-country-feeds` to sync from upstream
 
 ### News API (`app/api/news/route.ts`)
-- `GET /api/news` — global feed (fetches from all Google News regions in parallel)
-- `GET /api/news?topic=technology` — topic-specific feed
-- `GET /api/news?q=search` — search across regions
-- `GET /api/news?country=MM` — country-specific feed (Google News or fallback RSS)
-- 5-minute in-memory cache per query
+- `GET /api/news?batch=N&loc=XX` — global feed, 12 countries x 1 feed per batch; `x-total-batches` header; user's country swapped into batch 0
+- `GET /api/news?topic=technology` — topic feed (publisher RSS, `TOPIC_FEEDS`)
+- `GET /api/news?q=search` — Bing News RSS across a few markets
+- `GET /api/news?country=MM` — up to 20 sampled feeds for that country
+- Returns raw XML (trimmed to 20 items) — the client parses, keeping worker CPU low
+- Workers Free limits: 50 subrequests/invocation (redirects + Cache API count), 6 concurrent fetches (pooled in `fetchAll`)
+- Stale-while-revalidate on `caches.default`: fresh 10 min, served stale up to 6h while refreshing via `waitUntil`; bump `CACHE_VERSION` to invalidate
 
 ### Globe Interaction (`components/GlobeScene.tsx`)
 - Clicking the map finds nearest country centroid via haversine distance (2000km max)
@@ -81,7 +84,5 @@ newsglobe/               ← repo root = Next.js app root
 
 ## Important Notes
 
-- Google News RSS feeds don't require API keys
-- Fallback RSS feeds may go stale — run `/test-feeds` periodically
-- The `REGION_FEEDS` array in `route.ts` is kept for the global view but country clicks use `countryFeeds.ts`
+- Publisher RSS feeds go stale — run `/test-feeds` periodically
 - Globe auto-rotation stops at zoom > 3.5 and during flyTo animations

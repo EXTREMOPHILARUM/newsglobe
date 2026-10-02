@@ -24,7 +24,7 @@ Steps:
 
 5. **Country Feed Performance** — For the country click feature:
    - How long does fetching a single country's feed take?
-   - Are fallback RSS feeds slower than Google News feeds?
+   - Which publisher RSS feeds are slowest from the Cloudflare edge (p90 > 2s)?
 
 6. **Report** — Present findings as a prioritized list:
    - Critical issues (blocking user experience)

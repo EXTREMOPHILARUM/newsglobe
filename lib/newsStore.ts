@@ -38,9 +38,16 @@ interface NewsState {
   clearCountry: () => void;
 }
 
-/** Small random offset so dots at the same region coord don't stack */
-function jitter(): number {
-  return (Math.random() - 0.5) * 2; // ±1 degree (~100km)
+/**
+ * Small offset so dots at the same region coord don't stack. Seeded by the article
+ * URL so a dot stays put across polls instead of jumping on every refresh.
+ */
+function jitter(seed: string, salt: number): number {
+  let h = 2166136261 ^ salt;
+  for (let i = 0; i < seed.length; i++) {
+    h = Math.imul(h ^ seed.charCodeAt(i), 16777619);
+  }
+  return ((h >>> 0) / 0xffffffff - 0.5) * 2; // ±1 degree (~100km)
 }
 
 /** Apply client-side geocoding to refine article coordinates */
@@ -48,16 +55,63 @@ function geocodeArticles(articles: NewsArticle[]): NewsArticle[] {
   return articles.map((a) => {
     const coords = geocodeFast(`${a.title} ${a.snippet}`);
     if (coords) {
-      return { ...a, lat: coords.lat + jitter() * 0.3, lng: coords.lng + jitter() * 0.3 };
+      return { ...a, lat: coords.lat + jitter(a.url, 1) * 0.3, lng: coords.lng + jitter(a.url, 2) * 0.3 };
     }
     // Fall back to region coords with jitter to spread dots
     return {
       ...a,
-      lat: (a.regionLat ?? a.lat) + jitter(),
-      lng: (a.regionLng ?? a.lng) + jitter(),
+      lat: (a.regionLat ?? a.lat) + jitter(a.url, 1),
+      lng: (a.regionLng ?? a.lng) + jitter(a.url, 2),
     };
   });
 }
+
+/** Global view drops articles older than this (some publisher feeds update rarely) */
+const GLOBAL_MAX_AGE_MS = 7 * 24 * 3600 * 1000;
+/** Parallel batch requests for the global view */
+const BATCH_CONCURRENCY = 6;
+
+/**
+ * Round-robin articles across countries (in first-seen order, so the user's
+ * country leads). The globe only draws the first 100 and the ticker the first 20,
+ * so plain concatenation would put them all in one region.
+ */
+function interleaveByRegion(articles: NewsArticle[]): NewsArticle[] {
+  const groups = new Map<string, NewsArticle[]>();
+  for (const a of articles) {
+    const key = `${a.regionLat},${a.regionLng}`;
+    const group = groups.get(key);
+    if (group) group.push(a);
+    else groups.set(key, [a]);
+  }
+  const lists = [...groups.values()];
+  const out: NewsArticle[] = [];
+  for (let i = 0; out.length < articles.length; i++) {
+    for (const list of lists) {
+      if (i < list.length) out.push(list[i]);
+    }
+  }
+  return out;
+}
+
+interface BatchResult {
+  feeds: RawFeedResponse[];
+  totalBatches: number | null;
+}
+
+async function fetchBatch(params: URLSearchParams, batch: number): Promise<BatchResult | null> {
+  const batchParams = new URLSearchParams(params);
+  batchParams.set("batch", String(batch));
+  const res = await fetch(`/api/news?${batchParams.toString()}`);
+  if (!res.ok) return null;
+  const total = Number(res.headers.get("x-total-batches"));
+  return { feeds: await res.json(), totalBatches: Number.isInteger(total) && total > 0 ? total : null };
+}
+
+/** Bumped on every fetchNews call; older in-flight fetches stop writing to the store */
+let fetchGeneration = 0;
+/** View (category + query) currently shown, so a poll refreshes in place */
+let loadedViewKey: string | null = null;
 
 function filterArticles(
   articles: NewsArticle[],
@@ -116,7 +170,12 @@ export const useNewsStore = create<NewsState>((set, get) => ({
 
   fetchNews: async () => {
     const { activeCategory, searchQuery } = get();
-    set({ loading: true, error: null });
+    const generation = ++fetchGeneration;
+    const requestedViewKey = searchQuery ? `q:${searchQuery}` : activeCategory === "all" ? "global" : `topic:${activeCategory}`;
+    // Polls refresh the current view in place; only a view change shows the loading state
+    if (requestedViewKey !== loadedViewKey || get().articles.length === 0) {
+      set({ loading: true, error: null });
+    }
     try {
       // Fetch user's geo location once
       let { userCountry } = get();
@@ -142,11 +201,13 @@ export const useNewsStore = create<NewsState>((set, get) => ({
 
       // For search/topic queries, fetch all at once (no batching)
       if (searchQuery || activeCategory !== "all") {
-        // When searching, don't pass topic — Google News search doesn't support it
+        // When searching, don't pass topic — search results aren't categorised
         if (searchQuery) params.delete("topic");
         const res = await fetch(`/api/news?${params.toString()}`);
+        if (generation !== fetchGeneration) return;
         if (!res.ok) throw new Error("Failed to fetch news");
         const rawFeeds: RawFeedResponse[] = await res.json();
+        if (generation !== fetchGeneration) return;
         const parsed = parseRawFeeds(rawFeeds, activeCategory);
         const data = geocodeArticles(parsed);
         // Don't filter by category during search — results don't have meaningful categories
@@ -155,12 +216,13 @@ export const useNewsStore = create<NewsState>((set, get) => ({
           : filterArticles(data, activeCategory, searchQuery);
 
         let pendingFlyTo: FlyToTarget | null = null;
-        if (searchQuery && filtered.length > 0) {
+        if (searchQuery && filtered.length > 0 && requestedViewKey !== loadedViewKey) {
           const avgLat = filtered.reduce((s, a) => s + a.lat, 0) / filtered.length;
           const avgLng = filtered.reduce((s, a) => s + a.lng, 0) / filtered.length;
           pendingFlyTo = { lat: avgLat, lng: avgLng, zoom: 4 };
         }
 
+        loadedViewKey = requestedViewKey;
         set({
           articles: data,
           filteredArticles: filtered,
@@ -171,41 +233,76 @@ export const useNewsStore = create<NewsState>((set, get) => ({
         return;
       }
 
-      // Global view: fetch incrementally in batches (stops when a batch returns empty)
-      const MAX_BATCHES = 10;
+      // Global view: batch 0 first (user's region, gives the total), then the rest in parallel
+      const viewKey = requestedViewKey;
+      const isRefresh = loadedViewKey === viewKey && get().articles.length > 0;
+      const isCurrent = () => {
+        const s = get();
+        return generation === fetchGeneration && s.activeCategory === "all" && !s.searchQuery;
+      };
 
-      for (let b = 0; b < MAX_BATCHES; b++) {
-        // Abort if user changed category, started a search, or selected a country mid-fetch
-        const currentState = get();
-        if (currentState.activeCategory !== activeCategory || currentState.searchQuery || currentState.selectedCountry) break;
+      // Parsed + geocoded once per batch; publish() only merges
+      const batches: NewsArticle[][] = [];
+      const cutoff = Date.now() - GLOBAL_MAX_AGE_MS;
+      const addBatch = (b: number, feeds: RawFeedResponse[]) => {
+        batches[b] = geocodeArticles(parseRawFeeds(feeds)).filter(
+          (a) => Date.parse(a.publishedAt) >= cutoff
+        );
+      };
+      const publish = () => {
+        const seen = new Set<string>();
+        const merged = interleaveByRegion(
+          batches.flat().filter((a) => {
+            if (seen.has(a.url)) return false;
+            seen.add(a.url);
+            return true;
+          })
+        );
+        loadedViewKey = viewKey;
+        set({ articles: merged, filteredArticles: merged, loading: false, error: null });
+      };
 
-        const batchParams = new URLSearchParams(params);
-        batchParams.set("batch", String(b));
-        const res = await fetch(`/api/news?${batchParams.toString()}`);
-        if (!res.ok) continue;
-        const batchRawFeeds: RawFeedResponse[] = await res.json();
-        if (batchRawFeeds.length === 0) break; // no more batches
-        const batchParsed = parseRawFeeds(batchRawFeeds);
-        const batchData = geocodeArticles(batchParsed);
+      // Batch 0 also tells us how many batches exist, so give it one retry
+      const first =
+        (await fetchBatch(params, 0).catch(() => null)) ??
+        (await fetchBatch(params, 0).catch(() => null));
+      if (!isCurrent()) return;
+      if (first) addBatch(0, first.feeds);
+      // Initial load: show the user's region right away. A refresh swaps once at the end
+      // so the globe doesn't shrink to one batch while the rest reload.
+      if (!isRefresh && batches[0]?.length) publish();
 
-        const { articles: existing, activeCategory: cat, searchQuery: q } = get();
-        // First batch replaces, subsequent batches merge
-        const base = b === 0 ? [] : existing;
-        const baseUrls = new Set(base.map((a) => a.url));
-        const newArticles = batchData.filter((a) => !baseUrls.has(a.url));
-        const merged = [...base, ...newArticles];
-        const filtered = filterArticles(merged, cat, q);
+      const total = first?.totalBatches ?? 1;
+      let next = 1;
+      let failed = first ? 0 : 1;
+      await Promise.all(
+        Array.from({ length: Math.min(BATCH_CONCURRENCY, total - 1) }, async () => {
+          while (next < total) {
+            const b = next++;
+            const result = await fetchBatch(params, b).catch(() => null);
+            if (!isCurrent()) return;
+            if (!result) {
+              failed++;
+              continue;
+            }
+            addBatch(b, result.feeds);
+            if (!isRefresh && batches[b].length > 0) publish();
+          }
+        })
+      );
+      if (!isCurrent()) return;
 
-        set({
-          articles: merged,
-          filteredArticles: filtered,
-          loading: false,
-        });
+      if (batches.some((list) => list && list.length > 0)) {
+        publish();
+      } else if (failed > 0 && !isRefresh) {
+        set({ error: "Failed to fetch news", loading: false });
+      } else {
+        set({ loading: false });
       }
-
-      set({ loading: false });
     } catch (e) {
-      set({ error: (e as Error).message, loading: false });
+      if (generation === fetchGeneration) {
+        set({ error: (e as Error).message, loading: false });
+      }
     }
   },
 
@@ -222,11 +319,13 @@ export const useNewsStore = create<NewsState>((set, get) => ({
       const res = await fetch(`/api/news?country=${encodeURIComponent(code)}`);
       if (!res.ok) throw new Error("Failed to fetch country news");
       const rawFeeds: RawFeedResponse[] = await res.json();
+      // A later click (or Back) superseded this request
+      if (get().selectedCountry?.code !== code) return;
       const parsed = parseRawFeeds(rawFeeds);
       const data = geocodeArticles(parsed);
       set({ countryArticles: data, countryLoading: false });
     } catch {
-      set({ countryLoading: false });
+      if (get().selectedCountry?.code === code) set({ countryLoading: false });
     }
   },
 

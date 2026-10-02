@@ -1,19 +1,19 @@
 # NewsGlobe
 
-Real-time trending news from 150 countries on an interactive 3D globe.
+Real-time trending news from 148 countries on an interactive 3D globe.
 
 **[newsglobe.saurabhn.com](https://newsglobe.saurabhn.com)**
 
 ## What is this?
 
-NewsGlobe pulls headlines from ~150 countries via Google News RSS feeds and plots them on a spinning 3D globe. Click any country to see its trending stories, search for topics, or just watch the world's news light up in real time.
+NewsGlobe pulls headlines from ~150 countries via publishers' own RSS feeds and plots them on a spinning 3D globe. Click any country to see its trending stories, search for topics, or just watch the world's news light up in real time.
 
 Inspired by [Polyglobe](https://pizz.watch/polyglobe) (which does this for Polymarket bets).
 
 ## Features
 
 - Interactive 3D globe with auto-rotation and day/night overlay
-- 150 countries with Google News feeds + fallback RSS for countries without Google News
+- 148 countries, each with direct publisher RSS feeds (~720 feeds)
 - Polygon-based country selection (click anywhere inside a country's border)
 - Client-side geocoding using 7,000+ city database for precise article placement
 - Category filters: World, Business, Tech, Science, Sports, Entertainment, Health
@@ -27,7 +27,7 @@ Inspired by [Polyglobe](https://pizz.watch/polyglobe) (which does this for Polym
 - **3D/Map**: MapLibre GL (globe projection), React Map GL, TopoJSON
 - **State**: Zustand
 - **Styling**: Tailwind CSS 4, Framer Motion
-- **Data**: Google News RSS via `rss-parser`, geocoding via `city-timezones`
+- **Data**: publisher RSS + Bing News RSS (search), parsed in the browser; geocoding via `city-timezones`
 - **Hosting**: Cloudflare Workers via `@opennextjs/cloudflare`
 - **Caching**: Workers Cache API (5-min TTL, per-datacenter)
 
@@ -54,7 +54,7 @@ npm run deploy    # deploy to production
 ```
 app/
   api/news/route.ts     — News API: global, topic, country, and search feeds
-  page.tsx              — Main page, polls API every 60s
+  page.tsx              — Main page, polls API every 5 min
 components/
   GlobeScene.tsx        — MapLibre globe with news dots, polygon country selection
   Sidebar.tsx           — Article list + mobile slide-up sheet
@@ -64,7 +64,7 @@ components/
   DayNightOverlay.tsx   — Day/night terminator on globe
   InfoButton.tsx        — About modal + GitHub link
 lib/
-  countryFeeds.ts       — 150 countries: Google News params or fallback RSS URLs
+  countryFeeds.ts       — 148 countries: publisher RSS URLs
   newsStore.ts          — Zustand store: articles, country selection, search
   types.ts              — NewsArticle, Category, colors
   geocode.ts            — Client-side geocoding (city-timezones + static table)
@@ -76,8 +76,8 @@ public/
 
 ## Credits & Data Sources
 
-- **[Google News RSS](https://news.google.com/)** — primary news feed for countries with Google News editions
-- **[news-feed-list-of-countries](https://github.com/yavuz/news-feed-list-of-countries)** — fallback RSS feed URLs for countries without Google News
+- **[Bing News RSS](https://www.bing.com/news)** — search results
+- **[news-feed-list-of-countries](https://github.com/yavuz/news-feed-list-of-countries)** — starting list of publisher RSS feeds per country
 - **[Natural Earth](https://www.naturalearthdata.com/)** — TopoJSON country polygons and landmass data (via [world-atlas](https://github.com/topojson/world-atlas))
 - **[CARTO](https://carto.com/basemaps/)** — Dark Matter basemap tiles
 - **[Nominatim / OpenStreetMap](https://nominatim.openstreetmap.org/)** — geocoding
