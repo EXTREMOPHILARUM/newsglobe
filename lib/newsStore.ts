@@ -183,7 +183,7 @@ export const useNewsStore = create<NewsState>((set, get) => ({
         try {
           const geoRes = await fetch("/api/geo");
           if (geoRes.ok) {
-            const geo = await geoRes.json();
+            const geo = await geoRes.json() as { country?: string };
             userCountry = geo.country || "US";
           } else {
             userCountry = "US";

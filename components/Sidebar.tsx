@@ -1,5 +1,8 @@
 "use client";
 
+import ArticleText from "./ArticleText";
+import ArticleLinks from "./ArticleLinks";
+import ReadingLanguage from "./ReadingLanguage";
 import { useState } from "react";
 import { useNewsStore } from "@/lib/newsStore";
 import { CATEGORY_COLORS } from "@/lib/types";
@@ -35,6 +38,7 @@ function ArticleList() {
 
   return (
     <>
+      <ReadingLanguage />
       <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between shrink-0">
         {isCountryView ? (
           <>
@@ -91,7 +95,7 @@ function ArticleList() {
                 />
                 <div className="flex-1 min-w-0">
                   <p className="text-white text-xs font-medium leading-tight line-clamp-2">
-                    {article.title}
+                    <ArticleText article={article} />
                   </p>
                   <div className="flex items-center gap-2 mt-1.5">
                     <span className="text-gray-500 text-[10px]">
@@ -101,16 +105,7 @@ function ArticleList() {
                     <span className="text-gray-500 text-[10px]">
                       {timeAgo(article.publishedAt)}
                     </span>
-                    <a
-                      href={article.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="text-gray-600 hover:text-white text-[10px] transition-colors ml-auto"
-                      title="Open article"
-                    >
-                      ↗
-                    </a>
+                    <ArticleLinks url={article.url} />
                   </div>
                 </div>
                 {article.thumbnail && (

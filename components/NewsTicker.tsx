@@ -1,5 +1,6 @@
 "use client";
 
+import ArticleText from "./ArticleText";
 import { useState, useCallback } from "react";
 import { useNewsStore } from "@/lib/newsStore";
 
@@ -35,7 +36,7 @@ export default function NewsTicker() {
             {headlines.map((a, i) => (
               <span key={a.id} className="text-gray-300 text-xs mx-6">
                 <span className="text-white/60 mr-2">{a.source}</span>
-                {a.title}
+                <ArticleText article={a} />
                 {i < headlines.length - 1 && (
                   <span className="text-red-500 ml-6">●</span>
                 )}

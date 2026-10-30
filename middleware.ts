@@ -37,9 +37,7 @@ export function middleware(request: NextRequest) {
 
   try {
     const { env, ctx } = getCloudflareContext();
-    const analytics = (env as Record<string, unknown>).ANALYTICS as
-      | { writeDataPoint: (p: { blobs: string[]; doubles: number[] }) => void }
-      | undefined;
+    const analytics = env.ANALYTICS;
 
     if (analytics) {
       ctx.waitUntil(

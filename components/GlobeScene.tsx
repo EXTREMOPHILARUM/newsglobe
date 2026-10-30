@@ -1,5 +1,7 @@
 "use client";
 
+import ArticleText from "./ArticleText";
+import ArticleLinks from "./ArticleLinks";
 import { useRef, useCallback, useEffect, useState } from "react";
 import Map, {
   Marker,
@@ -217,7 +219,8 @@ export default function GlobeScene() {
 
     fetch("/countries-110m.json")
       .then((r) => r.json())
-      .then((topo: Topology) => {
+      .then((value) => {
+        const topo = value as Topology;
         const geojson = topojson.feature(topo, topo.objects.countries);
         // Add iso_n3 property from feature id for lookup
         if ("features" in geojson) {
@@ -339,25 +342,18 @@ export default function GlobeScene() {
           >
             <div className="bg-black/95 p-3 rounded-lg max-w-[280px] -m-[10px]">
               <p className="text-white text-xs font-semibold leading-tight">
-                {popupArticle.title}
+                <ArticleText article={popupArticle} />
               </p>
               {popupArticle.snippet && (
                 <p className="text-gray-400 text-[10px] mt-1.5 leading-relaxed line-clamp-2">
-                  {popupArticle.snippet}
+                  <ArticleText article={popupArticle} field="snippet" />
                 </p>
               )}
               <div className="flex items-center justify-between mt-2">
                 <span className="text-gray-500 text-[10px]">
                   {popupArticle.source}
                 </span>
-                <a
-                  href={popupArticle.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 text-[10px] hover:text-blue-300"
-                >
-                  Read more →
-                </a>
+                <ArticleLinks url={popupArticle.url} />
               </div>
             </div>
           </Popup>

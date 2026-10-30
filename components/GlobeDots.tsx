@@ -1,5 +1,8 @@
 "use client";
 
+import ArticleText from "./ArticleText";
+import { translatedArticleUrl } from "@/lib/translation";
+import { useReadingLanguage } from "@/lib/useTranslation";
 import { useRef, useMemo, useCallback } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
@@ -26,6 +29,7 @@ function Dot({
   position: THREE.Vector3;
   color: string;
 }) {
+  const language = useReadingLanguage((s) => s.language);
   const meshRef = useRef<THREE.Mesh>(null);
   const { hoveredArticle, setHoveredArticle } = useNewsStore();
   const isHovered = hoveredArticle?.id === article.id;
@@ -37,8 +41,8 @@ function Dot({
   });
 
   const handleClick = useCallback(() => {
-    window.open(article.url, "_blank");
-  }, [article.url]);
+    window.open(translatedArticleUrl(article.url, language), "_blank", "noopener,noreferrer");
+  }, [article.url, language]);
 
   return (
     <group position={position}>
@@ -62,7 +66,7 @@ function Dot({
         <Html distanceFactor={8} style={{ pointerEvents: "none" }}>
           <div className="bg-black/90 border border-white/20 rounded-lg p-3 max-w-[250px] backdrop-blur-sm">
             <p className="text-white text-xs font-semibold leading-tight">
-              {article.title}
+              <ArticleText article={article} />
             </p>
             <p className="text-gray-400 text-[10px] mt-1">{article.source}</p>
           </div>
