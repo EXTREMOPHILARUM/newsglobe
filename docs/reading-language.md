@@ -17,4 +17,6 @@ Full publisher pages are translated by Google Translate, not by NewsGlobe. Paywa
 - `npx wrangler deploy --dry-run`
 - With Playwright available and Chrome installed, start `npm run dev -- --port 3025`, then run `node tests/reading-language.browser.mjs`. Use `NODE_PATH` if Playwright comes from a shared runtime. The browser test stubs feeds and translation responses to verify preference, stale-result handling, fallback, links, and mobile behavior. Set `BASE_URL` to test the deployed UI with the same fixtures.
 
+The deployment sets `OPEN_NEXT_DEPLOY=true` when invoking Wrangler directly after the OpenNext build. The app has no OpenNext cache bindings to populate; this avoids the adapter starting a remote AI development preview just to read environment variables. Production AI remains enabled.
+
 After deployment, separately send real French headlines to `/api/translate` with English and Hindi targets and confirm valid translated output. Stubbed browser tests do not establish real model quality or third-party publisher compatibility.
