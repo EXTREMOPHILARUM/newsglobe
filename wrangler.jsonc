@@ -5,7 +5,7 @@
   "account_id": "57c222a75338c0e8e96bcc815f4ea186",
   "compatibility_date": "2026-03-01",
   "compatibility_flags": ["nodejs_compat"],
-  "ai": { "binding": "AI" },
+  "ai": { "binding": "AI", "remote": false },
   "ratelimits": [{ "name": "TRANSLATION_LIMITER", "namespace_id": "1030202601", "simple": { "limit": 30, "period": 60 } }],
   "placement": { "mode": "smart" },
   "observability": { "enabled": true },
